@@ -1,6 +1,5 @@
-
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const BASE_URL = 'https://api.themoviedb.org/3';
+const BASE_URL = "https://api.themoviedb.org/3";
 
 export const endpoints = {
   // Movies
@@ -20,7 +19,7 @@ export const endpoints = {
 };
 
 // Helper function to construct image URLs
-export const getImageUrl = (path, size = 'original') => {
+export const getImageUrl = (path, size = "original") => {
   if (!path) return null;
   return `https://image.tmdb.org/t/p/${size}${path}`;
 };
@@ -28,17 +27,17 @@ export const getImageUrl = (path, size = 'original') => {
 // Image size options
 export const IMAGE_SIZES = {
   poster: {
-    small: 'w185',
-    medium: 'w342',
-    large: 'w500',
-    original: 'original'
+    small: "w185",
+    medium: "w342",
+    large: "w500",
+    original: "original",
   },
   backdrop: {
-    small: 'w300',
-    medium: 'w780',
-    large: 'w1280',
-    original: 'original'
-  }
+    small: "w300",
+    medium: "w780",
+    large: "w1280",
+    original: "original",
+  },
 };
 
 // Main API object with all methods
@@ -53,7 +52,7 @@ export const tmdbApi = {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       throw error;
     }
   },
@@ -84,13 +83,17 @@ export const tmdbApi = {
 
   // Search movies
   searchMovies: async (query, page = 1) => {
-    const endpoint = `/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(query)}&page=${page}`;
+    const endpoint = `/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
+      query
+    )}&page=${page}`;
     return tmdbApi.get(endpoint);
   },
 
   // Search multi (movies, tv shows, people)
   searchMulti: async (query, page = 1) => {
-    const endpoint = `/search/multi?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(query)}&page=${page}`;
+    const endpoint = `/search/multi?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
+      query
+    )}&page=${page}`;
     return tmdbApi.get(endpoint);
   },
 
@@ -127,55 +130,36 @@ export const GENRES = {
   tvMovie: 10770,
   thriller: 53,
   war: 10752,
-  western: 37
-};
-
-// Helper function to get YouTube URL from video key
-export const getYouTubeUrl = (key) => {
-  return `https://www.youtube.com/watch?v=${key}`;
-};
-
-// Helper function to get YouTube embed URL
-export const getYouTubeEmbedUrl = (key) => {
-  return `https://www.youtube.com/embed/${key}`;
-};
-
-// Helper function to format date
-export const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
-
-// Helper function to format runtime
-export const formatRuntime = (minutes) => {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return `${hours}h ${mins}m`;
+  western: 37,
 };
 
 // Export all endpoints as an array for easy iteration
 export const movieCategories = [
-  { title: 'NETFLIX ORIGINALS', endpoint: endpoints.fetchNetflixOriginals, isLargeRow: true },
-  { title: 'Trending Now', endpoint: endpoints.fetchTrending },
-  { title: 'Top Rated', endpoint: endpoints.fetchTopRated },
-  { title: 'Action Movies', endpoint: endpoints.fetchActionMovies },
-  { title: 'Comedy Movies', endpoint: endpoints.fetchComedyMovies },
-  { title: 'Horror Movies', endpoint: endpoints.fetchHorrorMovies },
-  { title: 'Romance Movies', endpoint: endpoints.fetchRomanceMovies },
-  { title: 'Documentaries', endpoint: endpoints.fetchDocumentaries },
+  {
+    title: "NETFLIX ORIGINALS",
+    endpoint: endpoints.fetchNetflixOriginals,
+    isLargeRow: true,
+  },
+  { title: "Trending Now", endpoint: endpoints.fetchTrending },
+  { title: "Top Rated", endpoint: endpoints.fetchTopRated },
+  { title: "Action Movies", endpoint: endpoints.fetchActionMovies },
+  { title: "Comedy Movies", endpoint: endpoints.fetchComedyMovies },
+  { title: "Horror Movies", endpoint: endpoints.fetchHorrorMovies },
+  { title: "Romance Movies", endpoint: endpoints.fetchRomanceMovies },
+  { title: "Documentaries", endpoint: endpoints.fetchDocumentaries },
 ];
 
 // Error messages
 export const API_ERRORS = {
-  NETWORK_ERROR: 'Network error. Please check your internet connection.',
-  NOT_FOUND: 'The requested resource was not found.',
-  SERVER_ERROR: 'Server error. Please try again later.',
-  INVALID_API_KEY: 'Invalid API key. Please check your configuration.',
+  NETWORK_ERROR: "Network error. Please check your internet connection.",
+  NOT_FOUND: "The requested resource was not found.",
+  SERVER_ERROR: "Server error. Please try again later.",
+  INVALID_API_KEY: "Invalid API key. Please check your configuration.",
 };
 
 // Default/Fallback images
 export const FALLBACK_IMAGES = {
-  poster: '/path/to/default-poster.jpg',
-  backdrop: '/path/to/default-backdrop.jpg',
-  profile: '/path/to/default-profile.jpg',
+  poster: "/path/to/default-poster.jpg",
+  backdrop: "/path/to/default-backdrop.jpg",
+  profile: "/path/to/default-profile.jpg",
 };

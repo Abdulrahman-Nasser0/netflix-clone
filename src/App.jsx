@@ -1,10 +1,10 @@
 import './index.css'
-import Movie from './components/fetchMovies'
+import Movies from './components/Movies'
 function App() {
 
   return (
     <>
-      <Movie/>
+      <Movies/>
 
     </>
   )
