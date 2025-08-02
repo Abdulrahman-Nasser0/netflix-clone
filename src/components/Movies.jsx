@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { tmdbApi, endpoints } from '../services/api/tmdb';
+import Layout from './Layout';
 
 
 
@@ -28,31 +29,52 @@ const Movies = () => {
     }, []);
 
     if (loading) {
-        return 
+        return (
+            <Layout>
+                <div className="text-center text-lg font-bold mt-10 text-white">Loading...</div>
+            </Layout>
+        );
     }
     if (error) {
-        return <div className="text-center text-lg font-bold mt-10">Something went wrong! Please try again.</div>;
+        return (
+            <Layout>
+                <div className="text-center text-lg font-bold mt-10 text-white">Something went wrong! Please try again.</div>
+            </Layout>
+        );
     }
     if (!movieList.length) {
-        return <div className="text-center text-lg font-bold mt-10">No movies found</div>;
+        return (
+            <Layout>
+                <div className="text-center text-lg font-bold mt-10 text-white">No movies found</div>
+            </Layout>
+        );
     }
     
     return (
-    <div>
-        {loading && <div className="text-center text-lg font-bold mt-10">Loading...</div>}
-        {!loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-                {movieList.map((movie) => (
-                    <div key={movie.id} className="bg-gray-800 rounded-lg p-4">
-                        <h2 className="text-lg font-bold mb-2 text-white">{movie.name}</h2>
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="mb-2 rounded object-cover w-full" />
-                        <p className="text-sm text-gray-300">{movie.overview}</p>
-                    </div>
-                ))}
-            </div>
-        )}
-        
-    </div>
+    <Layout>
+        <div className="px-4 md:px-16">
+            <h1 className="text-white text-2xl font-bold mb-6">Netflix Originals</h1>
+            {loading && <div className="text-center text-lg font-bold mt-10 text-white">Loading...</div>}
+            {!loading && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                    {movieList.map((movie) => (
+                        <div key={movie.id} className="group cursor-pointer transition-transform duration-300 hover:scale-105">
+                            <div className="aspect-[2/3] overflow-hidden rounded-lg">
+                                <img 
+                                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+                                    alt={movie.name || movie.title} 
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+                                />
+                            </div>
+                            <div className="mt-2 px-1">
+                                <h2 className="text-white text-sm font-semibold truncate">{movie.name || movie.title}</h2>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    </Layout>
   )
 }
 
