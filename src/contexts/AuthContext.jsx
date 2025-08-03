@@ -3,6 +3,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext()
 
+// Fallback API URL if environment variable is not available
+const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL || 'https://netflix-clone-production-6036.up.railway.app/api'
+
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (!context) {
@@ -18,8 +21,9 @@ export const AuthProvider = ({ children }) => {
   // Debug: Check if environment variables are loaded
   useEffect(() => {
     console.log('Environment check:')
-    console.log('VITE_BACKEND_API_URL:', import.meta.env.VITE_BACKEND_API_URL)
-    console.log('All env vars:', import.meta.env)
+    console.log('VITE_BACKEND_API_URL (env):', import.meta.env.VITE_BACKEND_API_URL)
+    console.log('API_BASE_URL (with fallback):', API_BASE_URL)
+    console.log('Environment mode:', import.meta.env.MODE)
   }, [])
 
   // Check if user is already logged in when app starts
@@ -39,17 +43,10 @@ export const AuthProvider = ({ children }) => {
 
   // Simple login function with better error logging
   const login = async (email, password) => {
-    const apiUrl = import.meta.env.VITE_BACKEND_API_URL
-    
-    if (!apiUrl) {
-      console.error('VITE_BACKEND_API_URL is not defined!')
-      return { success: false, error: 'Configuration error. Please try again later.' }
-    }
-
     try {
-      console.log('Attempting login to:', `${apiUrl}/login`)
+      console.log('Attempting login to:', `${API_BASE_URL}/login`)
       
-      const response = await fetch(`${apiUrl}/login`, {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,17 +77,10 @@ export const AuthProvider = ({ children }) => {
 
   // Simple register function with better error logging
   const register = async (userData) => {
-    const apiUrl = import.meta.env.VITE_BACKEND_API_URL
-    
-    if (!apiUrl) {
-      console.error('VITE_BACKEND_API_URL is not defined!')
-      return { success: false, error: 'Configuration error. Please try again later.' }
-    }
-
     try {
-      console.log('Attempting registration to:', `${apiUrl}/register`)
+      console.log('Attempting registration to:', `${API_BASE_URL}/register`)
       
-      const response = await fetch(`${apiUrl}/register`, {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +103,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  // Rest of your logout function stays the same
+  // Logout function
   const logout = async () => {
     const token = localStorage.getItem('auth_token')
     
@@ -123,8 +113,7 @@ export const AuthProvider = ({ children }) => {
     
     if (token) {
       try {
-        const apiUrl = import.meta.env.VITE_BACKEND_API_URL
-        const response = await fetch(`${apiUrl}/logout`, {
+        const response = await fetch(`${API_BASE_URL}/logout`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -141,8 +130,6 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.log('Backend logout request failed:', error.message)
       }
-    } else {
-      console.log('No token found, skipping backend logout')
     }
   }
 
