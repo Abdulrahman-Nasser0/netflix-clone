@@ -1,9 +1,12 @@
 import './index.css'
 import Home from './pages/Home'
 import ErrorPage from './pages/ErrorPage'
-import TVShows from './pages/TVShows'
 import MoviesPage from './pages/MoviesPage'
+import TVShows from './pages/TVShows'
 import MyList from './pages/MyList'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import { AuthProvider } from './contexts/AuthContext'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -23,15 +26,22 @@ const router = createBrowserRouter([
   {
     path: '/my-list',
     element: <MyList/>
+  },
+  {
+    path: '/register',
+    element: <Register/>
+  },
+  {
+    path: '/login',
+    element: <Login/>
   }
 ])
 
 function App() {
-
   return (
-    <>
+    <AuthProvider>
       <RouterProvider router={router}/>
-    </>
+    </AuthProvider>
   )
 }
 

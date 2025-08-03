@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaSearch, FaBell, FaCaretDown } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showBrowseMenu, setShowBrowseMenu] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  // Logout handler with backend call
+  const handleLogout = async () => {
+    await logout();
+    setShowUserMenu(false);
+    navigate('/login');
+  };
 
   // Handle scroll effect for header background
   useEffect(() => {
@@ -63,64 +73,86 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Right side - Search, Notifications, User Menu */}
+        {/* Right side - Search, Notifications, User Menu / Auth Buttons */}
         <div className="flex items-center space-x-4">
           {/* Search Icon */}
           <button className="text-white hover:text-gray-300 transition-colors duration-200">
             <FaSearch className="text-xl" />
           </button>
 
-          {/* Notifications */}
-          <button className="text-white hover:text-gray-300 transition-colors duration-200">
-            <FaBell className="text-xl" />
-          </button>
+          {isAuthenticated ? (
+            <>
+              {/* Notifications - only show when authenticated */}
+              <button className="text-white hover:text-gray-300 transition-colors duration-200">
+                <FaBell className="text-xl" />
+              </button>
 
-          {/* User Profile Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center space-x-2 text-white hover:text-gray-300 transition-colors duration-200"
-            >
-              <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">U</span>
-              </div>
-              <FaCaretDown className="text-xs" />
-            </button>
-
-            {/* User Dropdown Menu */}
-            {showUserMenu && (
-              <div className="absolute right-0 top-12 w-48 bg-black/90 backdrop-blur-sm rounded-md border border-gray-700 py-2 shadow-xl">
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
-                  onClick={() => setShowUserMenu(false)}
-                >
-                  Manage Profiles
-                </Link>
-                <Link
-                  to="/account"
-                  className="block px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
-                  onClick={() => setShowUserMenu(false)}
-                >
-                  Account
-                </Link>
-                <Link
-                  to="/help"
-                  className="block px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
-                  onClick={() => setShowUserMenu(false)}
-                >
-                  Help Center
-                </Link>
-                <hr className="border-gray-700 my-2" />
+              {/* User Profile Menu */}
+              <div className="relative">
                 <button
-                  className="block w-full text-left px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
-                  onClick={() => setShowUserMenu(false)}
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center space-x-2 text-white hover:text-gray-300 transition-colors duration-200"
                 >
-                  Sign out of Netflix
+                  <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
+                    <span className="text-white text-sm font-semibold">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </span>
+                  </div>
+                  <FaCaretDown className="text-xs" />
                 </button>
+
+                {/* User Dropdown Menu */}
+                {showUserMenu && (
+                  <div className="absolute right-0 top-12 w-48 bg-black/90 backdrop-blur-sm rounded-md border border-gray-700 py-2 shadow-xl">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      Manage Profiles
+                    </Link>
+                    <Link
+                      to="/account"
+                      className="block px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      Account
+                    </Link>
+                    <Link
+                      to="/help"
+                      className="block px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      Help Center
+                    </Link>
+                    <hr className="border-gray-700 my-2" />
+                    <button
+                      className="block w-full text-left px-4 py-2 text-white hover:bg-gray-800 transition-colors duration-200"
+                      onClick={handleLogout}
+                    >
+                      Sign out of Netflix
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          ) : (
+            <>
+              {/* Auth Buttons - show when not authenticated */}
+              <Link
+                to="/login"
+                className="text-white hover:text-gray-300 transition-colors duration-200 text-sm font-medium"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
