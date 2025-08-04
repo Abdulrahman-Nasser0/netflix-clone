@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
+import NetflixInput from '../components/ui/NetflixInput';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -68,7 +69,7 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-black flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           {/* Netflix Logo */}
           <div className="text-center">
@@ -91,46 +92,26 @@ const Login = () => {
 
           <div className="space-y-4">
             {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`relative block w-full px-3 py-3 border ${
-                  errors.email ? 'border-red-500' : 'border-gray-600'
-                } placeholder-gray-400 text-white bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm`}
-                placeholder="Email address"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-500">{errors.email}</p>
-              )}
-            </div>
+            <NetflixInput
+              type="email"
+              name="email"
+              placeholder="Email address"
+              value={formData.email}
+              onChange={handleChange}
+              error={!!errors.email}
+              errorMessage={errors.email}
+            />
 
             {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`relative block w-full px-3 py-3 border ${
-                  errors.password ? 'border-red-500' : 'border-gray-600'
-                } placeholder-gray-400 text-white bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm`}
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
-              )}
-            </div>
+            <NetflixInput
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              error={!!errors.password}
+              errorMessage={errors.password}
+            />
           </div>
 
           <div className="flex items-center justify-between">

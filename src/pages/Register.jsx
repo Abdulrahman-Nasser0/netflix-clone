@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
+import NetflixInput from '../components/ui/NetflixInput';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,18 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { register } = useAuth();
+
+  // Pre-fill email if coming from Home page
+  useEffect(() => {
+    if (location.state?.email) {
+      setFormData(prev => ({
+        ...prev,
+        email: location.state.email
+      }));
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,7 +96,7 @@ const Register = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-black flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-scree flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Netflix Logo */}
         <div className="text-center">
@@ -110,88 +122,48 @@ const Register = () => {
 
           <div className="space-y-4">
             {/* Name Field */}
-            <div>
-              <label htmlFor="name" className="sr-only">
-                Full Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={formData.name}
-                onChange={handleChange}
-                className={`relative block w-full px-3 py-3 border ${
-                  errors.name ? 'border-red-500' : 'border-gray-600'
-                } placeholder-gray-400 text-white bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm`}
-                placeholder="Full Name"
-              />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-              )}
-            </div>
+            <NetflixInput
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              error={!!errors.name}
+              errorMessage={errors.name}
+            />
 
             {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`relative block w-full px-3 py-3 border ${
-                  errors.email ? 'border-red-500' : 'border-gray-600'
-                } placeholder-gray-400 text-white bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm`}
-                placeholder="Email address"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-500">{errors.email}</p>
-              )}
-            </div>
+            <NetflixInput
+              type="email"
+              name="email"
+              placeholder="Email address"
+              value={formData.email}
+              onChange={handleChange}
+              error={!!errors.email}
+              errorMessage={errors.email}
+            />
 
             {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`relative block w-full px-3 py-3 border ${
-                  errors.password ? 'border-red-500' : 'border-gray-600'
-                } placeholder-gray-400 text-white bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm`}
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
-              )}
-            </div>
+            <NetflixInput
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              error={!!errors.password}
+              errorMessage={errors.password}
+            />
 
             {/* Confirm Password Field */}
-            <div>
-              <label htmlFor="password_confirmation" className="sr-only">
-                Confirm Password
-              </label>
-              <input
-                id="password_confirmation"
-                name="password_confirmation"
-                type="password"
-                value={formData.password_confirmation}
-                onChange={handleChange}
-                className={`relative block w-full px-3 py-3 border ${
-                  errors.password_confirmation ? 'border-red-500' : 'border-gray-600'
-                } placeholder-gray-400 text-white bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm`}
-                placeholder="Confirm Password"
-              />
-              {errors.password_confirmation && (
-                <p className="mt-1 text-sm text-red-500">{errors.password_confirmation}</p>
-              )}
-            </div>
+            <NetflixInput
+              type="password"
+              name="password_confirmation"
+              placeholder="Confirm Password"
+              value={formData.password_confirmation}
+              onChange={handleChange}
+              error={!!errors.password_confirmation}
+              errorMessage={errors.password_confirmation}
+            />
           </div>
 
           <div>
