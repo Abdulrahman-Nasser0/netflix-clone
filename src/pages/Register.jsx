@@ -10,8 +10,6 @@ const Register = () => {
     password: '',
     password_confirmation: ''
   });
-
-  
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -72,7 +70,7 @@ const Register = () => {
     const result = await register(formData);
     
     if (result.success) {
-      navigate('/login');
+      navigate('/');
     } else {
       if (result.errors) {
         setErrors(result.errors);
