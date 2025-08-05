@@ -89,7 +89,7 @@ export const MyListProvider = ({ children }) => {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         },
         body: JSON.stringify({
-          movieId: movie.id,
+          movie_id: movie.id,
         })
       });
       
