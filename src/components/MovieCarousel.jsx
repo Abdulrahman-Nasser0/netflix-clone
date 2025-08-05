@@ -73,8 +73,8 @@ const MovieCarousel = ({ title = "", movies }) => {
           className="flex gap-0 overflow-x-scroll scrollbar-hide  md:px-16 "
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {movies.map((movie) => (
-            <div key={movie.id} className="flex-none">
+          {movies.map((movie, index) => (
+            <div key={index} className="flex-none">
               <MovieCard movie={movie} />
             </div>
           ))}

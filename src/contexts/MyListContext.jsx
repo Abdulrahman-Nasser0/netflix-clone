@@ -12,6 +12,20 @@ export const useMyList = () => {
   return context;
 };
 
+// const fetchMovieDetails = async (movieId) => {
+//     try {
+//       const movieData = await tmdbApi.getMovieDetails(movieId);
+//       return {
+//         id: movieData.id,
+//         title: movieData.title,
+//         poster_path: movieData.poster_path
+//       };
+//     } catch (error) {
+//       console.error(`Error fetching movie details for ID ${movieId}:`, error);
+//       return null;
+//     }
+//   };
+
 export const MyListProvider = ({ children }) => {
   const [myList, setMyList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,13 +44,15 @@ export const MyListProvider = ({ children }) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
       });
       
       if (response.ok) {
         const data = await response.json();
-        setMyList(data.favorites || []);
+        console.log('My List data:', data);
+        
       }
     } catch (error) {
       console.error('Error fetching my list:', error);
@@ -60,24 +76,30 @@ export const MyListProvider = ({ children }) => {
     if (!isAuthenticated) return;
     try {
       setLoading(true);
+      // Check if movie is already in My List
+      if (myList.some((m) => m.id === movie.id)) {
+        return; 
+      }
+
       const response = await fetch(`${API_BASE_URL}/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         },
         body: JSON.stringify({
-          movie_id: movie.id,
-          title: movie.name
+          movieId: movie.id,
         })
       });
       
       if (response.ok) {
         // Add to local state
-        setMyList(prev => [...prev, {
-          movie_id: movie.id,
-          title: movie.name
-        }]);
+        // setMyList(prev => [...prev, {
+        //   movie_id: movie.id,
+        //   title: movie.title || movie.name,
+        //   poster_path: movie.poster_path
+        // }]);
       }
       
     } catch (error) {

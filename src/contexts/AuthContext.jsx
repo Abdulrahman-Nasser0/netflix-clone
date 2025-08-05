@@ -46,15 +46,6 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       })
 
-      console.log('Login response status:', response.status)
-      console.log('Login response URL:', response.url)
-
-      // Check if we were redirected to a different URL (frontend URL)
-      if (response.url && response.url.includes('netlify.app')) {
-        console.error('Request was redirected to frontend URL:', response.url)
-        return { success: false, error: 'API endpoint redirected unexpectedly. Please check backend configuration.' }
-      }
-
       if (!response.ok) {
         const text = await response.text()
         console.log('Login error response text:', text)
@@ -109,9 +100,6 @@ export const AuthProvider = ({ children }) => {
         credentials: 'include',
         body: JSON.stringify(userData),
       })
-
-      console.log('Registration response status:', response.status)
-      console.log('Registration response URL:', response.url)
 
       // Check if we were redirected to a different URL (frontend URL)
       if (response.url && response.url.includes('netlify.app')) {
