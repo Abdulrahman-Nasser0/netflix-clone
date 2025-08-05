@@ -6,6 +6,9 @@ import TVShows from "./pages/TVShows";
 import MyList from "./pages/MyList";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Account from "./pages/Account";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MyListProvider } from './contexts/MyListContext';
 
@@ -19,15 +22,27 @@ const router = createBrowserRouter([
   },
   {
     path: "/movies",
-    element: <MoviesPage />,
+    element: (
+      <ProtectedRoute>
+        <MoviesPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/tv-shows",
-    element: <TVShows />,
+    element: (
+      <ProtectedRoute>
+        <TVShows />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/my-list",
-    element: <MyList />,
+    element: (
+      <ProtectedRoute>
+        <MyList />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/register",
@@ -36,6 +51,22 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/account",
+    element: (
+      <ProtectedRoute>
+        <Account />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
 import NetflixInput from '../components/ui/NetflixInput';
@@ -12,7 +12,18 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
+
+  // Pre-fill email if coming from registration
+  useEffect(() => {
+    if (location.state?.email) {
+      setFormData(prev => ({
+        ...prev,
+        email: location.state.email
+      }));
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,7 +70,9 @@ const Login = () => {
     const result = await login(formData.email, formData.password);
     
     if (result.success) {
-      navigate('/');
+      // Redirect to intended page or home
+      const redirectTo = location.state?.from?.pathname || '/';
+      navigate(redirectTo, { replace: true });
     } else {
       setErrors({ general: result.error || 'Login failed' });
     }

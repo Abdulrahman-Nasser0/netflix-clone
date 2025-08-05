@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MovieCard from "./ui/MovieCard";
 
-const MovieCarousel = ({ title = "", movies }) => {
+const MovieCarousel = ({ title = "", movies, mediaType = "movie" }) => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const scrollRef = useRef(null);
@@ -75,7 +75,7 @@ const MovieCarousel = ({ title = "", movies }) => {
         >
           {movies.map((movie, index) => (
             <div key={index} className="flex-none">
-              <MovieCard movie={movie} />
+              <MovieCard movie={movie} mediaType={mediaType} />
             </div>
           ))}
         </div>

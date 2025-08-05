@@ -82,7 +82,11 @@ const Register = () => {
     const result = await register(formData);
     
     if (result.success) {
-      navigate('/login');
+      // Show success message and redirect to login
+      setErrors({ success: 'Registration successful! Please sign in with your credentials.' });
+      setTimeout(() => {
+        navigate('/login', { state: { email: formData.email } });
+      }, 2000);
     } else {
       if (result.errors) {
         setErrors(result.errors);
@@ -113,10 +117,16 @@ const Register = () => {
 
         {/* Registration Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* General Error */}
+          {/* General Error or Success */}
           {errors.general && (
             <div className="bg-red-600 text-white p-3 rounded-md text-sm">
               {errors.general}
+            </div>
+          )}
+          
+          {errors.success && (
+            <div className="bg-green-600 text-white p-3 rounded-md text-sm">
+              {errors.success}
             </div>
           )}
 

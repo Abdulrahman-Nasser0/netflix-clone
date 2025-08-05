@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const apiUrl = import.meta.env.VITE_BACKEND_API_URL || 'https://netflix-backend-production-15f5.up.railway.app/api'
+      const apiUrl = import.meta.env.VITE_BACKEND_API_URL || 'https://netflix-clone-production-72c4.up.railway.app/api'
       console.log('Attempting login to:', `${apiUrl}/login`)
       
       const response = await fetch(`${apiUrl}/login`, {
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const apiUrl = import.meta.env.VITE_BACKEND_API_URL || 'https://netflix-backend-production-15f5.up.railway.app/api'
+      const apiUrl = import.meta.env.VITE_BACKEND_API_URL || 'https://netflix-clone-production-72c4.up.railway.app/api'
       console.log('Attempting registration to:', `${apiUrl}/register`)
       
       const response = await fetch(`${apiUrl}/register`, {
