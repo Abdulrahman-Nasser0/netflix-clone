@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Layout from '../components/Layout'
 import MovieCategoryRow from '../components/MovieCategoryRow'
+import MovieModal from '../components/ui/MovieModal'
 import { endpoints } from '../services/api/tmdb'
 
 const Movies = () => {
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const movieCategories = [
     { title: "Top Rated Movies", endpoint: endpoints.fetchTopRated },
     { title: "Action Movies", endpoint: endpoints.fetchActionMovies },
@@ -30,9 +32,21 @@ const Movies = () => {
 
         {/* Movie Categories */}
         {movieCategories.map((category, index) => (
-          <MovieCategoryRow key={index} category={category} />
+          <MovieCategoryRow 
+            key={index} 
+            category={category} 
+            onMovieClick={setSelectedMovie}
+          />
         ))}
       </div>
+
+      {/* Movie Modal */}
+      {selectedMovie && (
+        <MovieModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
+      )}
     </Layout>
   )
 }

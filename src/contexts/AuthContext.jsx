@@ -32,8 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const apiUrl = import.meta.env.VITE_BACKEND_API_URL || 'https://netflix-clone-production-72c4.up.railway.app/api'
-      console.log('Attempting login to:', `${apiUrl}/login`)
+      const apiUrl = import.meta.env.VITE_BACKEND_API_URL
       
       const response = await fetch(`${apiUrl}/login`, {
         method: 'POST',
@@ -103,14 +102,12 @@ export const AuthProvider = ({ children }) => {
 
       // Check if we were redirected to a different URL (frontend URL)
       if (response.url && response.url.includes('netlify.app')) {
-        console.error('Request was redirected to frontend URL:', response.url)
         return { success: false, error: 'API endpoint redirected unexpectedly. Please check backend configuration.' }
       }
 
       if (!response.ok) {
         // Try to get response body even for non-ok responses
         const text = await response.text()
-        console.log('Registration error response text:', text)
         
         try {
           const data = JSON.parse(text)
@@ -166,7 +163,6 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.log('Backend logout request failed:', error.message)
-        // Don't throw error - local logout already completed
       }
     } else {
       console.log('No token found, skipping backend logout')

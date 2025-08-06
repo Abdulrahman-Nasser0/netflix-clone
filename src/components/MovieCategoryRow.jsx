@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { tmdbApi } from "../services/api/tmdb";
 import MovieCarousel from "./MovieCarousel";
 
-const MovieCategoryRow = ({ category }) => {
+const MovieCategoryRow = ({ category, onMovieClick }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,6 +47,7 @@ const MovieCategoryRow = ({ category }) => {
     <MovieCarousel
       title={category.title}
       movies={movies}
+      onMovieClick={onMovieClick}
     />
   );
 };

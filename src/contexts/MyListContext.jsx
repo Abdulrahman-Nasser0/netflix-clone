@@ -20,15 +20,12 @@ export const useMyList = () => {
 
 export const MyListProvider = ({ children }) => {
   const [myList, setMyList] = useState(new Set());
-  // For deletion
   const [myListMetaData, setMyListMetaData] = useState(new Map());
 
   const [loading, setLoading] = useState(false);
   const { isAuthenticated, user } = useAuth();
-  // base URL
   const API_BASE_URL = `${import.meta.env.VITE_BACKEND_API_URL}`;
 
-  // Helper function to create unique key for items
   const createItemKey = (tmdbId, mediaType) => `${mediaType}-${tmdbId}`;
 
 
@@ -41,11 +38,10 @@ export const MyListProvider = ({ children }) => {
         mediaType: metadata?.mediaType,
         addedAt: metadata?.addedAt
       };
-    }).filter(item => item.tmdbId); // Filter out items without valid metadata
+    }).filter(item => item.tmdbId); 
   };
 
 
-  // Get Movies/Tv Shows from My List - wrapped in useCallback to fix dependency issue
   const fetchMyList = useCallback(async () => {
     if (!isAuthenticated || !user) {
       setMyList(new Set());
@@ -96,7 +92,6 @@ export const MyListProvider = ({ children }) => {
   }, [isAuthenticated, user, API_BASE_URL]);
 
 
-  // Add movie/tv show to My List
   const addToMyList = async ({tmdbId, mediaType = 'movie'}) => {
     console.log('addToMyList called with:', { tmdbId, mediaType });
 
@@ -145,7 +140,6 @@ export const MyListProvider = ({ children }) => {
         const errorText = await response.text();
         console.error('API error response:', errorText);
         
-        // Rollback local state if API call fails
         setMyList((prev) => {
           const newSet = new Set(prev);
           newSet.delete(itemKey);
@@ -176,7 +170,6 @@ export const MyListProvider = ({ children }) => {
     } catch (error) {
       console.error('Error adding to favorites:', error);
       
-      // Rollback optimistic update on error
       setMyList((prev) => {
         const newSet = new Set(prev);
         newSet.delete(itemKey);
@@ -195,7 +188,6 @@ export const MyListProvider = ({ children }) => {
 
   };
 
-  // Remove movie/tv show from My List
   const removeFromMyList = async ({tmdbId, mediaType = 'movie'}) => {
     console.log('removeFromMyList called with:', { tmdbId, mediaType });
 
@@ -215,7 +207,6 @@ export const MyListProvider = ({ children }) => {
       setLoading(true);
       console.log('Starting optimistic update for removal...');
 
-      // Optimistic update - remove from local state first
       setMyList((prev) => {
         const newSet = new Set(prev);
         newSet.delete(itemKey);
@@ -268,7 +259,6 @@ export const MyListProvider = ({ children }) => {
     } catch (error) {
       console.error('Error removing from favorites:', error);
       
-      // Rollback optimistic update on error
       setMyList((prev) => new Set([...prev, itemKey]));
       setMyListMetaData((prev) => new Map([
         ...prev,
@@ -284,7 +274,6 @@ export const MyListProvider = ({ children }) => {
     }
   };
 
-  // Check if item is in My List
   const isInMyList = (tmdbId, mediaType = 'movie') => {
     const itemKey = createItemKey(tmdbId, mediaType);
     return myList.has(itemKey);

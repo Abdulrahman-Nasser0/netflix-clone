@@ -61,18 +61,18 @@ const Account = () => {
             <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
               <h2 className="text-white text-xl font-semibold mb-4">Account Actions</h2>
               <div className="space-y-4">
-                <button className="w-full text-left bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded border border-gray-600">
+                <button className="w-full text-left cursor-pointer bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded border border-gray-600">
                   Change Password
                 </button>
-                <button className="w-full text-left bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded border border-gray-600">
+                <button className="w-full text-left cursor-pointer bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded border border-gray-600">
                   Update Email
                 </button>
-                <button className="w-full text-left bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded border border-gray-600">
+                <button className="w-full text-left cursor-pointer bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded border border-gray-600">
                   Privacy Settings
                 </button>
                 <button 
                   onClick={handleLogout}
-                  className="w-full text-left bg-red-800 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-600"
+                  className="w-full text-left cursor-pointer bg-red-800 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-600"
                 >
                   Sign Out
                 </button>

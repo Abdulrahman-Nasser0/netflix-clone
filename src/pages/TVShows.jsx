@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Layout from '../components/Layout'
 import MovieCategoryRow from '../components/MovieCategoryRow'
+import MovieModal from '../components/ui/MovieModal'
 import { endpoints } from '../services/api/tmdb'
 
 const TVShows = () => {
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const tvCategories = [
     { 
       title: "Netflix Originals", 
@@ -32,9 +34,21 @@ const TVShows = () => {
 
         {/* TV Show Categories */}
         {tvCategories.map((category, index) => (
-          <MovieCategoryRow key={index} category={category} />
+          <MovieCategoryRow 
+            key={index} 
+            category={category} 
+            onMovieClick={setSelectedMovie}
+          />
         ))}
       </div>
+
+      {/* TV Show Modal */}
+      {selectedMovie && (
+        <MovieModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
+      )}
     </Layout>
   )
 }

@@ -3,12 +3,11 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { IoLanguage } from "react-icons/io5";
 
 const LanguageDropdown = ({ 
-  selectedLanguage = 'English',
-  onLanguageChange,
   className = ''
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
 
   const languages = [
     { code: 'en', name: 'English', nativeName: 'English' },
@@ -28,10 +27,8 @@ const LanguageDropdown = ({
   }, [])
 
   const handleLanguageSelect = (language) => {
-    if (onLanguageChange) {
-      onLanguageChange(language)
-    }
-    setIsOpen(false)
+    setSelectedLanguage(language.name);
+    setIsOpen(false);
   }
 
 

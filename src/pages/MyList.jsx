@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { useMyList } from "../contexts/MyListContext";
 import MovieCarousel from "../components/MovieCarousel";
+import MovieModal from "../components/ui/MovieModal";
 import { tmdbApi } from "../services/api/tmdb";
 
 const MyList = () => {
@@ -9,8 +10,9 @@ const MyList = () => {
   const [myListDetails, setMyListDetails] = useState([]);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState(null);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
-  // Fetch full details for each favorite from TMDB
+
   const fetchDetails = async () => {
     if (!myList || !Array.isArray(myList)) {
       console.log('myList is not ready:', myList);
@@ -21,10 +23,10 @@ const MyList = () => {
     setDetailsLoading(true);
     setDetailsError(null);
     try {
-      // Fetch details for all favorites concurrently
+
       const detailPromises = myList.map(async (favorite) => {
         try {
-          // Try to fetch with the correct media type first
+
           let endpoint = favorite.mediaType === "tv"
             ? `/tv/${favorite.tmdbId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`
             : `/movie/${favorite.tmdbId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`;
@@ -37,7 +39,7 @@ const MyList = () => {
             mediaType: favorite.mediaType,
           };
         } catch (error) {
-          // If the first request fails, try the opposite media type
+
           try {
             const alternateMediaType = favorite.mediaType === "tv" ? "movie" : "tv";
             const alternateEndpoint = alternateMediaType === "tv"
@@ -50,7 +52,7 @@ const MyList = () => {
             return {
               ...alternateResponse,
               favoriteId: favorite.id,
-              mediaType: alternateMediaType, // Update with the correct media type
+              mediaType: alternateMediaType, 
             };
           } catch (alternateError) {
             console.error(
@@ -59,7 +61,7 @@ const MyList = () => {
               alternateError.message
             );
             
-            // Return a fallback object instead of null
+
             return {
               id: favorite.tmdbId,
               title: favorite.mediaType === "movie" ? `Unknown Movie (ID: ${favorite.tmdbId})` : undefined,
@@ -75,7 +77,7 @@ const MyList = () => {
       });
 
       const details = await Promise.all(detailPromises);
-      // Filter out any null/undefined results but keep error objects
+
       setMyListDetails(details.filter(Boolean));
     } catch (error) {
       console.error("Error fetching favorite details:", error);
@@ -150,7 +152,10 @@ const MyList = () => {
                   </div>
                 </div>
               )}
-              <MovieCarousel movies={myListDetails} />
+              <MovieCarousel 
+                movies={myListDetails} 
+                onMovieClick={setSelectedMovie}
+              />
             </>
           )}
 
@@ -164,6 +169,14 @@ const MyList = () => {
           </div>
         </div>
       </div>
+
+      {/* Movie Modal */}
+      {selectedMovie && (
+        <MovieModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
+      )}
     </Layout>
   );
 };

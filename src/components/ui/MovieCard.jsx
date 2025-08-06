@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useMyList } from "../../contexts/MyListContext";
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, onMovieClick }) => {
   const [showToast, setShowToast] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Local loading state
+  const [isLoading, setIsLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const { addToMyList, removeFromMyList, isInMyList } = useMyList();
 
@@ -11,44 +11,36 @@ const MovieCard = ({ movie }) => {
   const mediaType = movie.name && !movie.title ? 'tv' : 'movie';
   const inMyList = isInMyList(movie.id, mediaType);
 
-  const handleMovieClick = async () => {
-    // Prevent multiple clicks while processing
+  const handleCardClick = () => {
+    if (onMovieClick) {
+      onMovieClick(movie);
+    }
+  };
+
+  const handleAddToListClick = async (e) => {
+    e.stopPropagation(); // Prevent modal from opening
     if (isLoading) return;
 
     try {
       setIsLoading(true);
       
-      // ✅ Better media type detection with multiple fallbacks
-      let detectedMediaType = 'movie'; // Default to movie
+      let detectedMediaType = 'movie';
       
       if (movie.name && !movie.title) {
-        detectedMediaType = 'tv'; // Has name but no title = TV show
+        detectedMediaType = 'tv';
       } else if (movie.first_air_date) {
-        detectedMediaType = 'tv'; // Has first_air_date = TV show
+        detectedMediaType = 'tv';
       } else if (movie.release_date) {
-        detectedMediaType = 'movie'; // Has release_date = Movie
+        detectedMediaType = 'movie';
       }
       
-      console.log('Movie click:', {
-        id: movie.id,
-        title: movie.title || movie.name,
-        mediaType: detectedMediaType,
-        inMyList,
-        hasTitle: !!movie.title,
-        hasName: !!movie.name,
-        hasReleaseDate: !!movie.release_date,
-        hasFirstAirDate: !!movie.first_air_date
-      });
-      
       if (inMyList) {
-        // Remove from list
         await removeFromMyList({
           tmdbId: movie.id,
           mediaType: detectedMediaType
         });
         setToastMessage('Removed from My List');
       } else {
-        // Add to list
         await addToMyList({
           tmdbId: movie.id,
           mediaType: detectedMediaType
@@ -56,12 +48,11 @@ const MovieCard = ({ movie }) => {
         setToastMessage('Added to My List');
       }
 
-      // Show toast only for this specific card
       setShowToast(true);
       setTimeout(() => setShowToast(false), 2000);
     } catch (error) {
       console.error("Error updating movie list:", error);
-      setToastMessage('Error updating list');
+      setToastMessage('Sign in to manage your list!');
       setShowToast(true);
       setTimeout(() => setShowToast(false), 2000);
     } finally {
@@ -70,20 +61,32 @@ const MovieCard = ({ movie }) => {
   };
 
   return (
-    <div
-      className="m-3 relative cursor-pointer transition-transform duration-200 hover:scale-105"
-      onClick={handleMovieClick}
-    >
-      <div className="overflow-hidden rounded-sm w-[15rem] h-[8rem]">
-        <img
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={movie.title || movie.name || "Movie poster"}
-          className="object-cover w-full h-full transition-transform duration-700 ease-out"
-          onError={(e) => {
-            e.target.src = "/images/no-image.jpg"; // Fallback image
-          }}
-        />
+    <div className="m-3 relative group">
+      {/* Main Movie Card - Click to open modal */}
+      <div
+        className="cursor-pointer transition-transform duration-200 hover:scale-105"
+        onClick={handleCardClick}
+      >
+        <div className="overflow-hidden rounded-sm w-[15rem] h-[8rem]">
+          <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title || movie.name || "Movie poster"}
+            className="object-cover w-full h-full transition-transform duration-700 ease-out"
+            onError={(e) => {
+              e.target.src = "/no-image.jpg";
+            }}
+          />
+        </div>
       </div>
+
+      {/* Add to List Button - Appears on hover */}
+      <button
+        onClick={handleAddToListClick}
+        className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+        title={inMyList ? "Remove from My List" : "Add to My List"}
+      >
+        {inMyList ? "-" : "+"}
+      </button>
 
       {/* Visual indicator for items in list */}
       {inMyList && (
@@ -92,16 +95,16 @@ const MovieCard = ({ movie }) => {
         </div>
       )}
 
-      {/* Use local loading state instead of global */}
+      {/* Loading indicator */}
       {isLoading && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
           <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
-      {/* This toast is now unique to each card and shows dynamic message */}
+      {/* Toast notification */}
       {showToast && (
-        <div className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
+        <div className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-20">
           {toastMessage}
         </div>
       )}
