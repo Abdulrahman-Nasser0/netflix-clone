@@ -27,11 +27,11 @@ const MyList = () => {
       const detailPromises = myList.map(async (favorite) => {
         try {
 
-          let endpoint = favorite.mediaType === "tv"
-            ? `/tv/${favorite.tmdbId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`
-            : `/movie/${favorite.tmdbId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`;
+          const path = favorite.mediaType === "tv"
+            ? `/tv/${favorite.tmdbId}`
+            : `/movie/${favorite.tmdbId}`;
 
-          let response = await tmdbApi.get(endpoint);
+          let response = await tmdbApi.get(path, { language: 'en-US' });
           
           return {
             ...response,
@@ -42,12 +42,12 @@ const MyList = () => {
 
           try {
             const alternateMediaType = favorite.mediaType === "tv" ? "movie" : "tv";
-            const alternateEndpoint = alternateMediaType === "tv"
-              ? `/tv/${favorite.tmdbId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`
-              : `/movie/${favorite.tmdbId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US`;
+            const alternatePath = alternateMediaType === "tv"
+              ? `/tv/${favorite.tmdbId}`
+              : `/movie/${favorite.tmdbId}`;
 
             console.log(`Trying alternate media type ${alternateMediaType} for ID ${favorite.tmdbId}`);
-            const alternateResponse = await tmdbApi.get(alternateEndpoint);
+            const alternateResponse = await tmdbApi.get(alternatePath, { language: 'en-US' });
             
             return {
               ...alternateResponse,

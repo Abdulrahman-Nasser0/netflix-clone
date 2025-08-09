@@ -27,6 +27,7 @@ const router = createBrowserRouter([
         <MoviesPage />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorPage />,
   },
   {
     path: "/tv-shows",
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
         <TVShows />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorPage />,
   },
   {
     path: "/my-list",
@@ -43,14 +45,17 @@ const router = createBrowserRouter([
         <MyList />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorPage />,
   },
   {
     path: "/register",
     element: <Register />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/profile",
@@ -59,6 +64,7 @@ const router = createBrowserRouter([
         <Profile />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorPage />,
   },
   {
     path: "/account",
@@ -67,6 +73,7 @@ const router = createBrowserRouter([
         <Account />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorPage />,
   },
 ]);
 

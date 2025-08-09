@@ -10,7 +10,17 @@ const MovieCategoryRow = ({ category, onMovieClick }) => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const data = await tmdbApi.get(category.endpoint);
+        // category.endpoint may be a full endpoint string like "/discover/movie?..."
+        // Support both: if it contains a query string, split and pass as params; else pass path only
+        let path = category.endpoint;
+        let params = {};
+        if (typeof path === "string" && path.includes("?")) {
+          const [p, q] = path.split("?");
+          path = p;
+          const usp = new URLSearchParams(q);
+          usp.forEach((v, k) => { params[k] = v; });
+        }
+        const data = await tmdbApi.get(path, params);
         setMovies(data.results.slice(0, 20)); // limit to 20 movies
       } catch (error) {
         console.error(`Failed to fetch ${category.title}:`, error);

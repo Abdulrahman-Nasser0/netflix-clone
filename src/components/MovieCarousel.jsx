@@ -49,8 +49,8 @@ const MovieCarousel = ({
         {title}
       </h2>
 
-      {/* Carousel Container */}
-      <div className="relative group">
+  {/* Carousel Container */}
+  <div className="relative group" data-row-container="true">
         {/* Left Arrow */}
         {showLeftArrow && (
           <button
@@ -82,6 +82,7 @@ const MovieCarousel = ({
           ref={scrollRef}
           onScroll={handleScroll}
           className="flex gap-2 overflow-x-scroll scrollbar-hide  md:px-16 "
+          data-scroll-container="true"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {movies.map((movie, index) => (

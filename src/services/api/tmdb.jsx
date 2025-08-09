@@ -3,19 +3,19 @@ const BASE_URL = "https://api.themoviedb.org/3";
 
 export const endpoints = {
   // Movies
-  fetchTrending: `/trending/all/week?api_key=${API_KEY}&language=en-US`,
-  fetchNetflixOriginals: `/discover/tv?api_key=${API_KEY}&with_networks=213`,
-  fetchTopRated: `/movie/top_rated?api_key=${API_KEY}&language=en-US`,
-  fetchActionMovies: `/discover/movie?api_key=${API_KEY}&with_genres=28`,
-  fetchComedyMovies: `/discover/movie?api_key=${API_KEY}&with_genres=35`,
-  fetchHorrorMovies: `/discover/movie?api_key=${API_KEY}&with_genres=27`,
-  fetchRomanceMovies: `/discover/movie?api_key=${API_KEY}&with_genres=10749`,
-  fetchDocumentaries: `/discover/movie?api_key=${API_KEY}&with_genres=99`,
-  fetchSciFiMovies: `/discover/movie?api_key=${API_KEY}&with_genres=878`,
-  fetchMysteryMovies: `/discover/movie?api_key=${API_KEY}&with_genres=9648`,
-  fetchWesternMovies: `/discover/movie?api_key=${API_KEY}&with_genres=37`,
-  fetchAnimationMovies: `/discover/movie?api_key=${API_KEY}&with_genres=16`,
-  fetchTVMovies: `/discover/movie?api_key=${API_KEY}&with_genres=10770`,
+  fetchTrending: `/trending/all/week?language=en-US`,
+  fetchNetflixOriginals: `/discover/tv?with_networks=213`,
+  fetchTopRated: `/movie/top_rated?language=en-US`,
+  fetchActionMovies: `/discover/movie?with_genres=28`,
+  fetchComedyMovies: `/discover/movie?with_genres=35`,
+  fetchHorrorMovies: `/discover/movie?with_genres=27`,
+  fetchRomanceMovies: `/discover/movie?with_genres=10749`,
+  fetchDocumentaries: `/discover/movie?with_genres=99`,
+  fetchSciFiMovies: `/discover/movie?with_genres=878`,
+  fetchMysteryMovies: `/discover/movie?with_genres=9648`,
+  fetchWesternMovies: `/discover/movie?with_genres=37`,
+  fetchAnimationMovies: `/discover/movie?with_genres=16`,
+  fetchTVMovies: `/discover/movie?with_genres=10770`,
 };
 
 // Helper function to construct image URLs
@@ -42,71 +42,99 @@ export const IMAGE_SIZES = {
 
 // Main API object with all methods
 export const tmdbApi = {
-  // Generic GET request
-  get: async (endpoint) => {
-    try {
-      const response = await fetch(`${BASE_URL}${endpoint}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  async get(path, params = {}) {
+    // Always resolve against the origin and ensure the "/3" API prefix is present
+    const origin = "https://api.themoviedb.org";
+    const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+    const bearer = import.meta.env.VITE_TMDB_BEARER;
+
+    // If neither creds exist, skip network and let caller handle gracefully
+    if (!bearer && !apiKey) {
+      const err = new Error("TMDB credentials missing (VITE_TMDB_BEARER or VITE_TMDB_API_KEY)");
+      err.code = "TMDB_NO_CREDS";
+      throw err;
+    }
+
+    // Normalize path to include /3 when a relative path or root path is provided
+    let normalizedPath = path || "";
+    if (/^https?:\/\//i.test(normalizedPath)) {
+      // Absolute URL provided; use as-is
+      // new URL will handle it directly
+    } else {
+      if (normalizedPath.startsWith("/3/")) {
+        // correct prefix already present
+      } else if (normalizedPath.startsWith("/")) {
+        normalizedPath = "/3" + normalizedPath; // e.g. "/movie/..." -> "/3/movie/..."
+      } else if (normalizedPath.length > 0) {
+        normalizedPath = "/3/" + normalizedPath; // e.g. "movie/..." -> "/3/movie/..."
+      } else {
+        normalizedPath = "/3";
       }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("API Error:", error);
+    }
+
+    const url = new URL(normalizedPath, origin);
+    const search = new URLSearchParams(params);
+
+    // Only append api_key if no Bearer token is provided
+    if (!bearer && apiKey) {
+      search.set("api_key", apiKey);
+    }
+    if (search.toString()) {
+      url.search = search.toString();
+    }
+
+    const headers = bearer ? { Authorization: `Bearer ${bearer}` } : {};
+    const res = await fetch(url.toString(), { headers });
+
+    if (!res.ok) {
+      // Keep console clean; throw rich error without logging here
+      const text = await res.text().catch(() => "");
+      const error = new Error(`TMDB ${res.status}: ${text || res.statusText}`);
+      error.status = res.status;
+      error.url = url.toString();
       throw error;
     }
+    return res.json();
   },
 
   // Get movie by ID
   getMovieDetails: async (movieId) => {
-    const endpoint = `/movie/${movieId}?api_key=${API_KEY}&language=en-US`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/movie/${movieId}`, { language: 'en-US' });
   },
 
   // Get TV show by ID
   getTVDetails: async (tvId) => {
-    const endpoint = `/tv/${tvId}?api_key=${API_KEY}&language=en-US`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/tv/${tvId}`, { language: 'en-US' });
   },
 
   // Get movie videos (trailers)
   getMovieVideos: async (movieId) => {
-    const endpoint = `/movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/movie/${movieId}/videos`, { language: 'en-US' });
   },
 
   // Get similar movies
   getSimilarMovies: async (movieId) => {
-    const endpoint = `/movie/${movieId}/similar?api_key=${API_KEY}&language=en-US&page=1`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/movie/${movieId}/similar`, { language: 'en-US', page: 1 });
   },
 
   // Search movies
   searchMovies: async (query, page = 1) => {
-    const endpoint = `/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
-      query
-    )}&page=${page}`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/search/movie`, { language: 'en-US', query, page });
   },
 
   // Search multi (movies, tv shows, people)
   searchMulti: async (query, page = 1) => {
-    const endpoint = `/search/multi?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
-      query
-    )}&page=${page}`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/search/multi`, { language: 'en-US', query, page });
   },
 
   // Get movies by genre
   getMoviesByGenre: async (genreId, page = 1) => {
-    const endpoint = `/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&page=${page}`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/discover/movie`, { with_genres: genreId, page });
   },
 
   // Get all genres
   getGenres: async () => {
-    const endpoint = `/genre/movie/list?api_key=${API_KEY}&language=en-US`;
-    return tmdbApi.get(endpoint);
+  return tmdbApi.get(`/genre/movie/list`, { language: 'en-US' });
   },
 };
 

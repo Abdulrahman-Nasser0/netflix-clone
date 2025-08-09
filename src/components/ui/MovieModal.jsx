@@ -31,26 +31,10 @@ const MovieModal = ({ movie, onClose }) => {
         // Fetch details, cast, videos, and similar content in parallel
         const [detailsRes, creditsRes, videosRes, similarRes] =
           await Promise.all([
-            tmdbApi.get(
-              `/${endpoint}/${movie.id}?api_key=${
-                import.meta.env.VITE_TMDB_API_KEY
-              }&language=en-US`
-            ),
-            tmdbApi.get(
-              `/${endpoint}/${movie.id}/credits?api_key=${
-                import.meta.env.VITE_TMDB_API_KEY
-              }&language=en-US`
-            ),
-            tmdbApi.get(
-              `/${endpoint}/${movie.id}/videos?api_key=${
-                import.meta.env.VITE_TMDB_API_KEY
-              }&language=en-US`
-            ),
-            tmdbApi.get(
-              `/${endpoint}/${movie.id}/similar?api_key=${
-                import.meta.env.VITE_TMDB_API_KEY
-              }&language=en-US&page=1`
-            ),
+            tmdbApi.get(`/${endpoint}/${movie.id}`, { language: "en-US" }),
+            tmdbApi.get(`/${endpoint}/${movie.id}/credits`, { language: "en-US" }),
+            tmdbApi.get(`/${endpoint}/${movie.id}/videos`, { language: "en-US" }),
+            tmdbApi.get(`/${endpoint}/${movie.id}/similar`, { language: "en-US", page: 1 }),
           ]);
 
         setMovieDetails(detailsRes);
