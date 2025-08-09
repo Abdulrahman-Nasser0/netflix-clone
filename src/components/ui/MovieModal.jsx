@@ -94,43 +94,15 @@ const MovieModal = ({ movie, onClose }) => {
       {/* Custom Scrollbar Styles */}
       <style jsx>{`
         .custom-scrollbar {
-          /* Hide scrollbar on mobile */
+          /* Hide scrollbar on all platforms, scrolling still works */
           scrollbar-width: none; /* Firefox */
-          -ms-overflow-style: none; /* IE and Edge */
+          -ms-overflow-style: none; /* IE and Edge Legacy */
         }
 
         .custom-scrollbar::-webkit-scrollbar {
-          width: 0px;
-          background: transparent; /* Hide scrollbar on mobile WebKit */
-        }
-
-        /* Show custom scrollbar on larger screens */
-        @media (min-width: 768px) {
-          .custom-scrollbar {
-            scrollbar-width: thin; /* Firefox */
-            scrollbar-color: rgba(107, 114, 128, 0.8) transparent; /* Firefox */
-          }
-
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-          }
-
-          .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(31, 41, 55, 0.3);
-            border-radius: 4px;
-          }
-
-          .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(107, 114, 128, 0.8);
-            border-radius: 4px;
-            border: 2px solid transparent;
-            background-clip: content-box;
-          }
-
-          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(156, 163, 175, 0.9);
-            background-clip: content-box;
-          }
+          width: 0 !important; /* Chrome, Safari, Opera */
+          height: 0 !important;
+          background: transparent;
         }
       `}</style>
 
@@ -145,10 +117,9 @@ const MovieModal = ({ movie, onClose }) => {
             className="bg-gray-900 rounded-lg w-full max-w-xs sm:max-w-sm md:max-w-2xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto custom-scrollbar"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
 
             {loading ? (
-              <div className="p-4 sm:p-8 text-center">
+              <div className="p-4 sm:p-8 text-center ">
                 <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
                 <p className="text-gray-300 text-sm sm:text-base">
                   Loading details...
@@ -183,7 +154,7 @@ const MovieModal = ({ movie, onClose }) => {
                     />
                     <button
                       onClick={onClose}
-                      className="absolute top-2 right-2 z-10 bg-black/50 hover:bg-black/70 rounded-full p-1.5 sm:p-2 transition-colors"
+                      className="absolute top-2 cursor-pointer right-2 z-10 bg-black/50 hover:bg-black/70 rounded-full p-1.5 sm:p-2 transition-colors"
                     >
                       <FaTimes className="text-white w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
@@ -337,7 +308,7 @@ const MovieModal = ({ movie, onClose }) => {
 
                   {/* Similar Movies - Only show on larger screens */}
                   {similarMovies.length > 0 && (
-                    <div className="mb-6 sm:mb-8 hidden sm:block">
+                    <div className="mb-6 pb-12 sm:mb-8 hidden sm:block">
                       <h3 className="text-base sm:text-xl font-bold text-white mb-3 sm:mb-4">
                         More Like This
                       </h3>

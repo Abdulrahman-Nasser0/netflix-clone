@@ -119,7 +119,7 @@ const Home = () => {
       )}
 
       {/* Movie Categories*/}
-      <div className="mx-auto px-4 sm:px-8 md:px-16 mt-8 py-8">
+      <div className="mx-auto mt-8 py-8">
         {movieCategories.map((category, index) => (
           <MovieCategoryRow 
             key={index} 

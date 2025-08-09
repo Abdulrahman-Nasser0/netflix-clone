@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
     <div className="min-h-screen relative ">
       <NetflixBg/>
       <Header />
-      <main className="pt-16 max-w-7xl mx-auto">
+      <main className="pt-16 mx-auto">
         {children}
       </main>
     </div>

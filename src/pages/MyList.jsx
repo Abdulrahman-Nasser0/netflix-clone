@@ -110,7 +110,7 @@ const MyList = () => {
   }
   return (
     <Layout>
-      <div className="mx-auto px-4 sm:px-8 md:px-16 mt-8 py-8">
+      <div className="mx-auto px-4 mt-8 py-8">
         <div className="px-4 md:px-16 mb-8">
           <h1 className="text-white text-4xl md:text-5xl font-bold mb-4">
             My List ({myList.length})
