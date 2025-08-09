@@ -2,7 +2,12 @@ import React, { useState, useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MovieCard from "./ui/MovieCard";
 
-const MovieCarousel = ({ title = "", movies, mediaType = "movie", onMovieClick }) => {
+const MovieCarousel = ({
+  title = "",
+  movies,
+  mediaType = "movie",
+  onMovieClick,
+}) => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const scrollRef = useRef(null);
@@ -38,21 +43,24 @@ const MovieCarousel = ({ title = "", movies, mediaType = "movie", onMovieClick }
   }
 
   return (
-    <div className="relative  mb-8">
+    <div className="relative my-[3vw]">
       {/* Section Title */}
-      <h2 className="text-white text-xl md:text-2xl font-bold mb-4 px-4 md:px-16">
+      <h2 className="text-white text-xl md:text-2xl font-bold mb-2 px-4 md:px-16">
         {title}
       </h2>
 
       {/* Carousel Container */}
-      <div className="relative">
+      <div className="relative group">
         {/* Left Arrow */}
         {showLeftArrow && (
           <button
             onClick={() => scroll("left")}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full  transition-opacity duration-300 cursor-pointer"
+            aria-label="Scroll left"
+            className="absolute inset-y-0 left-0 z-10 text-white w-10 md:w-12 flex items-center justify-start px-2
+           bg-gradient-to-r from-black/40 to-transparent
+           opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-300 cursor-pointer"
           >
-            <FaChevronLeft className="text-xl" />
+            <FaChevronLeft className="text-2xl" />
           </button>
         )}
 
@@ -60,9 +68,12 @@ const MovieCarousel = ({ title = "", movies, mediaType = "movie", onMovieClick }
         {showRightArrow && (
           <button
             onClick={() => scroll("right")}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full  transition-opacity duration-300 cursor-pointer"
+            aria-label="Scroll right"
+            className="absolute inset-y-0 right-0 z-10 text-white w-10 md:w-12 flex items-center justify-end px-2
+           bg-gradient-to-l from-black/40 to-transparent
+           opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-300 cursor-pointer"
           >
-            <FaChevronRight className="text-xl" />
+            <FaChevronRight className="text-2xl" />
           </button>
         )}
 
@@ -70,14 +81,14 @@ const MovieCarousel = ({ title = "", movies, mediaType = "movie", onMovieClick }
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex gap-0 overflow-x-scroll scrollbar-hide  md:px-16 "
+          className="flex gap-2 overflow-x-scroll scrollbar-hide  md:px-16 "
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {movies.map((movie, index) => (
             <div key={index} className="flex-none">
-              <MovieCard 
-                movie={movie} 
-                mediaType={mediaType} 
+              <MovieCard
+                movie={movie}
+                mediaType={mediaType}
                 onMovieClick={onMovieClick}
               />
             </div>

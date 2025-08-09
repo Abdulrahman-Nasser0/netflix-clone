@@ -41,7 +41,7 @@ const Header = () => {
 
   return (
     <header
-      className={`absolute top-0 left-0 right-0 z-400 h-16 bg-gradient-to-b from-black/70 to-transparent
+      className={`absolute top-0 left-0 right-0 z-400 pt-8 h-16 bg-gradient-to-b from-black/70 to-transparent
    `}
     >
       <div className="flex items-center justify-between px-4 md:px-16 h-full">

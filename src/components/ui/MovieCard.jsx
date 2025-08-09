@@ -61,20 +61,20 @@ const MovieCard = ({ movie, onMovieClick }) => {
   };
 
   return (
-    <div className="m-3 relative group">
+    <div className="relative group/movie">
       {/* Main Movie Card - Click to open modal */}
       <div
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
         onClick={handleCardClick}
       >
-        <div className="overflow-hidden rounded-sm w-[15rem] h-[8rem]">
+        <div className="overflow-hidden rounded-sm w-[15rem] h-[8.5rem]">
           <img
+            loading="lazy"
+            decoding="async"
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title || movie.name || "Movie poster"}
+            alt={movie.title || movie.name || "Poster"}
             className="object-cover w-full h-full transition-transform duration-700 ease-out"
-            onError={(e) => {
-              e.target.src = "/no-image.jpg";
-            }}
+            onError={(e) => { e.target.src = "/no-image.jpg"; }}
           />
         </div>
       </div>
@@ -82,7 +82,7 @@ const MovieCard = ({ movie, onMovieClick }) => {
       {/* Add to List Button - Appears on hover */}
       <button
         onClick={handleAddToListClick}
-        className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+        className="absolute top-2 right-2 cursor-pointer bg-black/70 hover:bg-black/90 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover/movie:opacity-100 transition-opacity duration-200 z-10"
         title={inMyList ? "Remove from My List" : "Add to My List"}
       >
         {inMyList ? "-" : "+"}
@@ -90,8 +90,8 @@ const MovieCard = ({ movie, onMovieClick }) => {
 
       {/* Visual indicator for items in list */}
       {inMyList && (
-        <div className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
-          ✓ In List
+        <div className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
+          ✓
         </div>
       )}
 
