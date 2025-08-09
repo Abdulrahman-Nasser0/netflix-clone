@@ -1,13 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { useAuth } from '../contexts/AuthContext';
+import { userApi } from '../services/api/user';
 
 const Account = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
+  const [form, setForm] = useState({
+    name: user?.name || '',
+    bio: user?.bio || '',
+    phone: user?.phone || ''
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatarUrl || null);
 
   const handleLogout = async () => {
     await logout();
+  };
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const onSave = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+    setSuccess('');
+    const payload = { name: form.name, bio: form.bio, phone: form.phone };
+    const res = await updateUser(payload);
+    if (!res.success) setError(res.error || 'Failed to update');
+    else setSuccess('Profile updated');
+    setSaving(false);
+  };
+
+  const onAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setSaving(true);
+      setError(''); setSuccess('');
+      const url = URL.createObjectURL(file);
+      setAvatarPreview(url);
+      const resp = await userApi.uploadAvatar(file);
+      const newUrl = resp?.avatarUrl || resp?.avatar_url || resp?.url;
+      if (newUrl) {
+        await updateUser({ avatarUrl: newUrl });
+        setSuccess('Avatar updated');
+      } else {
+        setSuccess('Avatar uploaded');
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -20,22 +70,46 @@ const Account = () => {
             {/* Account Info */}
             <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
               <h2 className="text-white text-xl font-semibold mb-4">Account Information</h2>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-gray-400 text-sm">Name</label>
-                  <p className="text-white">{user?.name || 'Not provided'}</p>
+              <form onSubmit={onSave} className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-700">
+                    {avatarPreview ? (
+                      <img src={avatarPreview} alt="avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center text-white text-xl">
+                        {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                      </div>
+                    )}
+                  </div>
+                  <label className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded border border-gray-600">
+                    Change Avatar
+                    <input type="file" accept="image/*" className="hidden" onChange={onAvatarChange} />
+                  </label>
                 </div>
                 <div>
-                  <label className="text-gray-400 text-sm">Email</label>
-                  <p className="text-white">{user?.email || 'Not provided'}</p>
+                  <label className="text-gray-400 text-sm block mb-1">Name</label>
+                  <input name="name" value={form.name} onChange={onChange} className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600" />
                 </div>
                 <div>
-                  <label className="text-gray-400 text-sm">Member since</label>
-                  <p className="text-white">
-                    {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Not available'}
-                  </p>
+                  <label className="text-gray-400 text-sm block mb-1">Email</label>
+                  <input disabled value={user?.email || ''} className="w-full bg-gray-900 text-gray-400 px-3 py-2 rounded border border-gray-700" />
                 </div>
-              </div>
+                <div>
+                  <label className="text-gray-400 text-sm block mb-1">Bio</label>
+                  <textarea name="bio" value={form.bio} onChange={onChange} rows={3} className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600" />
+                </div>
+                <div>
+                  <label className="text-gray-400 text-sm block mb-1">Phone</label>
+                  <input name="phone" value={form.phone} onChange={onChange} className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600" />
+                </div>
+                {error && <p className="text-red-400 text-sm">{error}</p>}
+                {success && <p className="text-green-400 text-sm">{success}</p>}
+                <div className="flex gap-3">
+                  <button disabled={saving} type="submit" className="cursor-pointer bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-4 py-2 rounded">{saving ? 'Saving...' : 'Save Changes'}</button>
+                  <button type="button" onClick={() => setForm({ name: user?.name || '', bio: user?.bio || '', phone: user?.phone || '' })} className="cursor-pointer bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">Reset</button>
+                </div>
+                <div className="pt-2 text-xs text-gray-400">Member since: {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Not available'}</div>
+              </form>
             </div>
 
             {/* Subscription Info */}

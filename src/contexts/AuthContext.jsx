@@ -1,5 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { userApi } from '../services/api/user'
+import { User } from '../models/User'
 
 const AuthContext = createContext()
 
@@ -169,12 +171,27 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const updateUser = async (updates) => {
+    const token = localStorage.getItem('auth_token')
+    if (!token) return { success: false, error: 'Not authenticated' }
+    try {
+      const data = await userApi.updateProfile(updates)
+      const updated = User.fromJSON(data.User || data.user || data)
+      localStorage.setItem('user', JSON.stringify(updated))
+      setUser(updated)
+      return { success: true, user: updated }
+    } catch (e) {
+      return { success: false, error: e.message }
+    }
+  }
+
   const value = {
     user,
     loading,
     login,
     register,
     logout,
+  updateUser,
     isAuthenticated: !!user
   }
 
