@@ -185,6 +185,28 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  // Fetch latest user from backend (/me) and update local state/storage
+  const refreshUser = async () => {
+    const token = localStorage.getItem('auth_token')
+    if (!token) return { success: false, error: 'Not authenticated' }
+    try {
+      const data = await userApi.getCurrent()
+      const updated = User.fromJSON(data.User || data.user || data)
+      localStorage.setItem('user', JSON.stringify(updated))
+      setUser(updated)
+      return { success: true, user: updated }
+    } catch (e) {
+      // If unauthorized, clear session
+      if ((e.message || '').includes('401')) {
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('user')
+        setUser(null)
+        return { success: false, error: 'Session expired, please sign in again.' }
+      }
+      return { success: false, error: e.message }
+    }
+  }
+
   const value = {
     user,
     loading,
@@ -192,6 +214,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
   updateUser,
+  refreshUser,
     isAuthenticated: !!user
   }
 

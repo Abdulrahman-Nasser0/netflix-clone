@@ -27,7 +27,8 @@ export const userApi = {
   },
   async uploadAvatar(file) {
     const form = new FormData();
-    form.append('avatar', file);
+  // Backend expects the file field to be named 'avatarUrl'
+  form.append('avatarUrl', file);
     const headers = { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` };
     const res = await fetch(`${API_URL}/user/avatar`, { method: 'POST', headers, body: form, credentials: 'include' });
     if (!res.ok) throw new Error(`POST /user/avatar failed: ${res.status}`);
