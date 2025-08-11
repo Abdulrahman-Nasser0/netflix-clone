@@ -47,16 +47,6 @@ Check out the live demo at [Netflix-Clone](https://netflix-clone-lemon-nu-42.ver
   <img src="public/readme/Screenshot from 2025-08-11 15-15-11.png" alt="Mobile" width="200"/>
 </div>
 
-## 🛠️ Technologies Used
-
-- **Frontend Framework:** React 19
-- **Backend Framework:** Laravel 12
-- **Build Tool:** Vite 7
-- **Styling:** TailwindCSS 4
-- **Routing:** React Router DOM 7
-- **Icons:** React Icons 5
-- **Testing:** Cypress
-- **State Management:** Context API & React Query
 
 ## 📋 Prerequisites
 
@@ -189,7 +179,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## �‍💻 Contributors
 
 - **Frontend Development**: [Abdulrahman Nasser](https://github.com/Abdulrahman-Nasser0)
-- **Backend Development**: [Mina](https://github.com/Mina-Melad-1) - Implemented the Laravel backend API, database design, authentication system, and favorites management
+- **Backend Development**: [Mina Milad](https://github.com/Mina-Melad-1) - Implemented the Laravel backend API, database design, authentication system, and favorites management
 
 ## 🔗 Backend Repository
 
