@@ -12,42 +12,40 @@ A modern, responsive Netflix clone built with React and Laravel, leveraging the 
 
 ## ✨ Features
 
-- 🎬 Browse trending movies and TV shows
+- 🎬 Browse trending movies and TV shows 
 - 📺 View detailed information about movies and shows
-- 🔍 Search functionality for finding specific content
+- 🔍 Search functionality for finding specific content (Coming Soon!)
 - 📱 Responsive design that works on all devices
 - 👤 User authentication system
 - 📋 Personal watchlist management
-- 🎭 Category filtering for different genres
-- 🖼️ Movie title overlays for better content identification
+- 🎭 Category filtering for different genres (Coming Soon!)
 
 ## 🚀 Live Demo
 
-Check out the live demo at [Netflix-Clone](https://netflix-clone-demo.example.com)
+Check out the live demo at [Netflix-Clone](https://netflix-clone-lemon-nu-42.vercel.app)
 
 ## 📸 Screenshots
 
 ### 🖥️ Desktop View
 
 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-  <img src="public/readme/Screenshot from 2025-08-11 15-12-12.png" alt="Home Page" width="400"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-12-24.png" alt="Movie Details" width="400"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-12-40.png" alt="Browse Page" width="400"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-13-31.png" alt="My List" width="400"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-13-52.png" alt="Account Settings" width="400"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-12-12.png" alt="Desktop" width="400"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-12-24.png" alt="Desktop" width="400"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-12-40.png" alt="Desktop" width="400"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-13-31.png" alt="Desktop" width="400"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-13-52.png" alt="Desktop" width="400"/>
 </div>
 
 ### 📱 Mobile View
 
 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-   <img src="public/readme/Screenshot from 2025-08-11 15-26-46.png" alt="Movie Modal" width="400"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-14-22.png" alt="Mobile Home" width="200"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-15-01.png" alt="Mobile Navigation" width="200"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-15-11.png" alt="Mobile Details" width="200"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-15-18.png" alt="Mobile" width="200"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-15-24.png" alt="Mobile" width="200"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-14-22.png" alt="Mobile" width="200"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-15-01.png" alt="Mobile" width="200"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-26-46.png" alt="Mobile" width="200"/>
+  <img src="public/readme/Screenshot from 2025-08-11 15-15-11.png" alt="Mobile" width="200"/>
 </div>
-  <img src="public/readme/Screenshot from 2025-08-11 15-15-18.png" alt="Movie Card Hover" width="300"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-15-24.png" alt="Movie Card Detail" width="300"/>
-
 
 ## 🛠️ Technologies Used
 
@@ -57,7 +55,6 @@ Check out the live demo at [Netflix-Clone](https://netflix-clone-demo.example.co
 - **Styling:** TailwindCSS 4
 - **Routing:** React Router DOM 7
 - **Icons:** React Icons 5
-- **API Client:** Axios
 - **Testing:** Cypress
 - **State Management:** Context API & React Query
 
@@ -69,12 +66,14 @@ Check out the live demo at [Netflix-Clone](https://netflix-clone-demo.example.co
 ## ⚙️ Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/Abdulrahman-Nasser0/netflix-clone.git
    cd netflix-clone
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    # or
@@ -82,12 +81,14 @@ Check out the live demo at [Netflix-Clone](https://netflix-clone-demo.example.co
    ```
 
 3. Create a `.env` file in the root directory with your TMDB API key:
+
    ```
    VITE_TMDB_API_KEY=your_api_key_here
    VITE_BACKEND_API_URL=your_backend_url_here
    ```
 
 4. Start the development server:
+
    ```bash
    npm run dev
    # or
@@ -133,7 +134,7 @@ The application integrates with The Movie Database (TMDB) API to fetch movie and
 
 ## 💡 About the Project
 
-This Netflix Clone was developed over approximately 15 days as a collaborative project. The frontend was built by me (Abdulrahman Nasser), while the backend implementation was developed by my collaborator Mina using Laravel.
+This Netflix Clone was developed over approximately 15 days as a collaborative project. The frontend was built by me (Abdulrahman Nasser), while the backend implementation was developed by my collaborator Mina Milad using Laravel.
 
 ### 🛠️ Technical Stack Overview
 
@@ -157,6 +158,7 @@ Throughout the development of this project, I faced several challenges that help
 5. **Movie Carousel Implementation**: Creating smooth, performant carousels for movie browsing that matched Netflix's behavior was particularly challenging.
 
 Through overcoming these challenges, I gained significant experience in:
+
 - Working with external APIs and handling their limitations
 - Building robust authentication systems
 - Creating reusable component libraries
@@ -187,18 +189,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## �‍💻 Contributors
 
 - **Frontend Development**: [Abdulrahman Nasser](https://github.com/Abdulrahman-Nasser0)
-- **Backend Development**: [Mina](https://github.com/your-friends-username) - Implemented the Laravel backend API, database design, authentication system, and favorites management
+- **Backend Development**: [Mina](https://github.com/Mina-Melad-1) - Implemented the Laravel backend API, database design, authentication system, and favorites management
 
-## 🔗 Related Projects
+## 🔗 Backend Repository
 
-- [Netflix Clone Backend](https://github.com/your-friends-username/netflix-clone-backend) - Laravel API powering this application
+- [Netflix Clone Backend](https://github.com/Mina-Melad-1/netflix-clone) - Laravel API powering this application
 
 ## �📬 Contact
 
-Abdulrahman Nasser - [@your_twitter](https://twitter.com/your_twitter) - your.email@example.com
-
-Project Link: [https://github.com/Abdulrahman-Nasser0/netflix-clone](https://github.com/Abdulrahman-Nasser0/netflix-clone)
+Abdulrahman Nasser - [LinkedIn](https://www.linkedin.com/in/abdulrahman-nasser0/)
 
 ---
 
-<p align="center">Made with ❤️ by Abdulrahman Nasser and Mina</p>
+<p align="center">Made by Abdulrahman Nasser and Mina Milad</p>
