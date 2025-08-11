@@ -1,9 +1,8 @@
 export class User {
-  constructor({ id, name, email, avatarUrl = null, phone = null, bio = null, created_at = null, updated_at = null, ...rest } = {}) {
+  constructor({ id, name, email, phone = null, bio = null, created_at = null, updated_at = null, ...rest } = {}) {
     this.id = id ?? rest.userId ?? null;
     this.name = name ?? '';
     this.email = email ?? '';
-    this.avatarUrl = avatarUrl ?? rest.avatar_url ?? rest.avatar ?? null;
     this.phone = phone ?? rest.phone_number ?? null;
     this.bio = bio ?? rest.about ?? null;
     this.created_at = created_at ?? rest.createdAt ?? null;
@@ -22,7 +21,6 @@ export class User {
       id: this.id,
       name: this.name,
       email: this.email,
-      avatarUrl: this.avatarUrl,
       phone: this.phone,
       bio: this.bio,
       created_at: this.created_at,

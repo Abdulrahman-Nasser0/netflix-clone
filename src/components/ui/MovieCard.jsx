@@ -144,21 +144,29 @@ const MovieCard = ({ movie, onMovieClick }) => {
         className="cursor-pointer transition-transform duration-200 hover:scale-105"
         onClick={handleCardClick}
       >
-        <div className="overflow-hidden rounded-sm w-[15rem] h-[8.5rem] bg-black">
+        <div className="overflow-hidden rounded-sm w-[15rem] h-[8.5rem] bg-black relative">
           {(() => {
             const backdrop = movie?.backdrop_path ? `https://image.tmdb.org/t/p/w780${movie.backdrop_path}` : null;
             const poster = movie?.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null;
             const url = backdrop || poster;
             const useCover = !!backdrop; // posters are portrait; use contain to avoid cropping
             return (
-              <img
-                loading="lazy"
-                decoding="async"
-                src={url}
-                alt={movie.title || movie.name || "Artwork"}
-                className={`${useCover ? 'object-cover' : 'object-contain'} w-full h-full transition-transform duration-700 ease-out`}
-                onError={(e) => { e.target.src = "/no-image.jpg"; }}
-              />
+              <>
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  src={url}
+                  alt={movie.title || movie.name || "Artwork"}
+                  className={`${useCover ? 'object-cover' : 'object-contain'} w-full h-full transition-transform duration-700 ease-out`}
+                  onError={(e) => { e.target.src = "/no-image.jpg"; }}
+                />
+                {/* Movie title overlay */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                  <h3 className="text-gray-300 text-sm font-semibold truncate">
+                    {movie.title?.toUpperCase() || movie.name?.toUpperCase() || "Unknown"}
+                  </h3>
+                </div>
+              </>
             );
           })()}
         </div>
@@ -305,6 +313,13 @@ function HoverPreview({ left, top, movie, inMyList, like, setLike, onOpen, onTog
             })()}
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/70" />
+          
+          {/* Movie title overlay on hover preview */}
+          <div className="absolute bottom-0 left-0 right-0 px-3 pb-2">
+            <h2 className="text-white text-lg font-semibold truncate">
+              {movie.title || movie.name || "Unknown"}
+            </h2>
+          </div>
         </div>
 
         {/* Meta + Actions */}

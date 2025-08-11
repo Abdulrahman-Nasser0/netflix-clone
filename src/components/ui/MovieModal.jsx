@@ -171,7 +171,7 @@ const MovieModal = ({ movie, onClose }) => {
                       {videos.length > 0 && (
                         <button
                           onClick={() => openTrailer(videos[0].key)}
-                          className="flex items-center space-x-2 bg-white hover:bg-gray-200 text-black px-3 py-2 sm:px-6 sm:py-3 rounded font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
+                          className="flex items-center cursor-pointer space-x-2 bg-white hover:bg-gray-200 text-black px-3 py-2 sm:px-6 sm:py-3 rounded font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
                         >
                           <FaPlay className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>Play Trailer</span>
@@ -181,7 +181,7 @@ const MovieModal = ({ movie, onClose }) => {
                       {/* Add/Remove from List */}
                       <button
                         onClick={handleToggleMyList}
-                        className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 sm:px-6 sm:py-3 rounded font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
+                        className="flex items-center cursor-pointer space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 sm:px-6 sm:py-3 rounded font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
                       >
                         {inMyList ? (
                           <>

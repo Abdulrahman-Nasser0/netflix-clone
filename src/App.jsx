@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Account from "./pages/Account";
+import ComingSoonPage from "./pages/ComingSoonPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MyListProvider } from './contexts/MyListContext';
@@ -75,6 +76,11 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
   },
+  {
+    path: "/coming-soon",
+    element: <ComingSoonPage />,
+    errorElement: <ErrorPage />,
+  }
 ]);
 
 function App() {

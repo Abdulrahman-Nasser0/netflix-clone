@@ -15,7 +15,7 @@ const Login = () => {
   const location = useLocation();
   const { login } = useAuth();
 
-  // Pre-fill email if coming from registration
+  // Pre-fill email 
   useEffect(() => {
     if (location.state?.email) {
       setFormData(prev => ({
@@ -31,7 +31,6 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -142,7 +141,7 @@ const Login = () => {
 
             <div className="text-sm">
               <Link
-                to="/forgot-password"
+                to="/coming-soon"
                 className="font-medium text-red-600 hover:text-red-500"
               >
                 Forgot your password?
