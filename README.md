@@ -35,24 +35,19 @@ Check out the live demo at [Netflix-Clone](https://netflix-clone-demo.example.co
   <img src="public/readme/Screenshot from 2025-08-11 15-12-40.png" alt="Browse Page" width="400"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-13-31.png" alt="My List" width="400"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-13-52.png" alt="Account Settings" width="400"/>
-   <img src="public/readme/Screenshot from 2025-08-11 15-19-16.png" alt="Movie Modal" width="400"/>
 </div>
 
 ### 📱 Mobile View
 
 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+   <img src="public/readme/Screenshot from 2025-08-11 15-19-16.png" alt="Movie Modal" width="400"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-14-22.png" alt="Mobile Home" width="200"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-15-01.png" alt="Mobile Navigation" width="200"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-15-11.png" alt="Mobile Details" width="200"/>
 </div>
-
-### 🎬 Movie Card Detail
-
-<div style="display: flex; gap: 10px; flex-wrap: wrap;">
   <img src="public/readme/Screenshot from 2025-08-11 15-15-18.png" alt="Movie Card Hover" width="300"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-15-24.png" alt="Movie Card Detail" width="300"/>
-  <img src="public/readme/Screenshot from 2025-08-11 15-17-26.png" alt="Movie Modal" width="300"/>
-</div>
+
 
 ## 🛠️ Technologies Used
 
