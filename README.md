@@ -40,7 +40,7 @@ Check out the live demo at [Netflix-Clone](https://netflix-clone-demo.example.co
 ### 📱 Mobile View
 
 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-   <img src="public/readme/Screenshot from 2025-08-11 15-19-16.png" alt="Movie Modal" width="400"/>
+   <img src="public/readme/Screenshot from 2025-08-11 15-26-46.png" alt="Movie Modal" width="400"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-14-22.png" alt="Mobile Home" width="200"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-15-01.png" alt="Mobile Navigation" width="200"/>
   <img src="public/readme/Screenshot from 2025-08-11 15-15-11.png" alt="Mobile Details" width="200"/>
