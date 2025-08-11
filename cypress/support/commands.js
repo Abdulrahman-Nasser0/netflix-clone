@@ -6,7 +6,6 @@ Cypress.Commands.add('seedAuth', (overrides = {}) => {
 		id: 1,
 		name: 'Test User',
 		email: 'user@example.com',
-		avatarUrl: null,
 		phone: '+111111111',
 		bio: 'Hello',
 		created_at: '2025-08-01T12:00:00Z',
@@ -48,7 +47,6 @@ Cypress.Commands.add('mockBackend', (routes = {}) => {
 	cy.intercept('PUT', `${base}/user`, (req) => {
 		req.reply({ User: { id: 1, email: 'user@example.com', ...req.body } })
 	}).as('updateUser')
-	cy.intercept('POST', `${base}/user/avatar`, { avatarUrl: 'https://cdn.example.com/u/1.jpg' }).as('avatar')
 
 	// Allow overrides for special tests
 	Object.entries(routes).forEach(([key, handler]) => {
