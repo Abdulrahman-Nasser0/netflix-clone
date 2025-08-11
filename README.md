@@ -47,6 +47,62 @@ Check out the live demo at [Netflix-Clone](https://netflix-clone-lemon-nu-42.ver
   <img src="public/readme/Screenshot from 2025-08-11 15-15-11.png" alt="Mobile" width="200"/>
 </div>
 
+## 💡 About the Project
+
+This Netflix Clone was developed over approximately 15 days as a collaborative project. The frontend was built by me (Abdulrahman Nasser), while the backend implementation was developed by my collaborator Mina Milad using Laravel.
+
+### 🛠️ Technical Stack Overview
+
+- **Frontend**: React with Vite, TailwindCSS, React Router, and Context API for state management
+- **Backend**: Laravel REST API with MySQL database, deployed on Railway
+- **External APIs**: TMDB API for movie and TV show data
+- **Testing**: Cypress for end-to-end tests
+
+### 🧠 Development Journey & Challenges
+
+Throughout the development of this project, I faced several challenges that helped me grow as a developer:
+
+1. **Complex API Integration**: The most significant challenge was implementing the favorites system. It required storing TMDB IDs in our database and then re-fetching detailed content information from TMDB when displaying user favorites - an intricate dance between our backend and the external API.
+
+2. **State Management**: Maintaining consistent state across the application while handling asynchronous API calls required careful implementation of React's Context API and custom hooks.
+
+3. **Responsive Design**: Recreating Netflix's sleek UI with proper responsiveness across all devices required meticulous attention to detail with TailwindCSS.
+
+4. **Authentication Flow**: Implementing a secure and user-friendly authentication system that works seamlessly with the Laravel backend required solving several CORS and token management challenges.
+
+5. **Movie Carousel Implementation**: Creating smooth, performant carousels for movie browsing that matched Netflix's behavior was particularly challenging.
+
+Through overcoming these challenges, I gained significant experience in:
+
+- Working with external APIs and handling their limitations
+- Building robust authentication systems
+- Creating reusable component libraries
+- Implementing complex UI patterns
+- Collaborating on full-stack applications with separated frontend and backend concerns
+
+## 📂 Project Structure
+
+```
+netflix-clone/
+├── public/              # Static assets
+├── src/
+│   ├── components/      # Reusable UI components
+│   ├── contexts/        # React contexts for state management
+│   ├── hooks/           # Custom hooks
+│   ├── models/          # Data models
+│   ├── pages/           # Application pages
+│   ├── services/        # API services
+│   ├── utils/           # Helper functions
+│   ├── App.jsx          # Main application component
+│   └── main.jsx         # Application entry point
+├── cypress/             # E2E tests
+└── ...config files
+```
+
+
+## 🔄 API Integration
+
+The application integrates with The Movie Database (TMDB) API to fetch movie and TV show data, while the Laravel backend handles user authentication, favorites management, and other persistent data. You'll need an API key from [TMDB](https://www.themoviedb.org/documentation/api) to run this project locally.
 
 ## 📋 Prerequisites
 
@@ -99,61 +155,6 @@ npm run cy:open
 npm run cy:run
 ```
 
-## 📂 Project Structure
-
-```
-netflix-clone/
-├── public/              # Static assets
-├── src/
-│   ├── components/      # Reusable UI components
-│   ├── contexts/        # React contexts for state management
-│   ├── hooks/           # Custom hooks
-│   ├── models/          # Data models
-│   ├── pages/           # Application pages
-│   ├── services/        # API services
-│   ├── utils/           # Helper functions
-│   ├── App.jsx          # Main application component
-│   └── main.jsx         # Application entry point
-├── cypress/             # E2E tests
-└── ...config files
-```
-
-## 🔄 API Integration
-
-The application integrates with The Movie Database (TMDB) API to fetch movie and TV show data, while the Laravel backend handles user authentication, favorites management, and other persistent data. You'll need an API key from [TMDB](https://www.themoviedb.org/documentation/api) to run this project locally.
-
-## 💡 About the Project
-
-This Netflix Clone was developed over approximately 15 days as a collaborative project. The frontend was built by me (Abdulrahman Nasser), while the backend implementation was developed by my collaborator Mina Milad using Laravel.
-
-### 🛠️ Technical Stack Overview
-
-- **Frontend**: React with Vite, TailwindCSS, React Router, and Context API for state management
-- **Backend**: Laravel REST API with MySQL database, deployed on Railway
-- **External APIs**: TMDB API for movie and TV show data
-- **Testing**: Cypress for end-to-end tests
-
-### 🧠 Development Journey & Challenges
-
-Throughout the development of this project, I faced several challenges that helped me grow as a developer:
-
-1. **Complex API Integration**: The most significant challenge was implementing the favorites system. It required storing TMDB IDs in our database and then re-fetching detailed content information from TMDB when displaying user favorites - an intricate dance between our backend and the external API.
-
-2. **State Management**: Maintaining consistent state across the application while handling asynchronous API calls required careful implementation of React's Context API and custom hooks.
-
-3. **Responsive Design**: Recreating Netflix's sleek UI with proper responsiveness across all devices required meticulous attention to detail with TailwindCSS.
-
-4. **Authentication Flow**: Implementing a secure and user-friendly authentication system that works seamlessly with the Laravel backend required solving several CORS and token management challenges.
-
-5. **Movie Carousel Implementation**: Creating smooth, performant carousels for movie browsing that matched Netflix's behavior was particularly challenging.
-
-Through overcoming these challenges, I gained significant experience in:
-
-- Working with external APIs and handling their limitations
-- Building robust authentication systems
-- Creating reusable component libraries
-- Implementing complex UI patterns
-- Collaborating on full-stack applications with separated frontend and backend concerns
 
 ## 🤝 Contributing
 
