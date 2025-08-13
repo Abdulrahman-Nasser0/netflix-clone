@@ -6,7 +6,7 @@ import { tmdbApi } from "../../services/api/tmdb"; // added
 
 // no video providers for hover to avoid third-party branding
 
-const MovieCard = ({ movie, onMovieClick }) => {
+const MovieCard = ({ movie, onMovieClick, className = "", responsive = false }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { addToMyList, removeFromMyList, isInMyList } = useMyList();
   // Hover preview state
@@ -81,12 +81,21 @@ const MovieCard = ({ movie, onMovieClick }) => {
     const rect = containerRef.current.getBoundingClientRect();
     const previewWidth = 352; // 22rem
     const margin = 16;
+    
+    // Center the preview horizontally relative to the card
     let left = rect.left + rect.width / 2 - previewWidth / 2;
+    
+    // Ensure the preview stays within the viewport bounds
     left = Math.max(margin, Math.min(left, window.innerWidth - previewWidth - margin));
-    let top = rect.top - 40; // prefer above a bit
+    
+    // Position vertically - try to position above first
+    let top = rect.top - 40; 
+    
+    // If not enough space above, position below
     if (top < margin) {
-      top = rect.bottom + 8; // place below if not enough space above
+      top = rect.bottom + 8;
     }
+    
     setOverlayPos({ left, top });
   };
 
@@ -114,6 +123,7 @@ const MovieCard = ({ movie, onMovieClick }) => {
       handleCardClick();
       return;
     }
+    
     // Try to measure the current hover preview element for seamless start rect
     const previewEl = document.querySelector(`[data-preview-id="movie-${movie.id}"]`);
     let rect;
@@ -123,13 +133,25 @@ const MovieCard = ({ movie, onMovieClick }) => {
       // Fallback to computed overlayPos with default size
       rect = { left: overlayPos.left, top: overlayPos.top, width: 352, height: 264 };
     }
+    
+    // Start loading modal data immediately but don't show it yet
+    if (onMovieClick) {
+      // Use a custom event to trigger preloading in MovieModal
+      const preloadEvent = new CustomEvent('preload-movie-modal', { 
+        detail: { movie } 
+      });
+      document.dispatchEvent(preloadEvent);
+    }
+    
+    // Show the animation
     setGrowRect({ left: rect.left, top: rect.top, width: rect.width || 352, height: rect.height || 264 });
     setGrowVisible(true);
-    // After animation, open the modal and remove transition
+    
+    // After animation finishes, show the fully loaded modal
     setTimeout(() => {
       handleCardClick();
       setGrowVisible(false);
-    }, 320);
+    }, 1000);
   };
 
   return (
@@ -141,23 +163,34 @@ const MovieCard = ({ movie, onMovieClick }) => {
     >
       {/* Main Movie Card - Click to open modal */}
       <div
-        className="cursor-pointer transition-transform duration-200 hover:scale-105"
+        className={`cursor-pointer transition-transform duration-200 hover:scale-105 ${className}`}
         onClick={handleCardClick}
       >
-        <div className="overflow-hidden rounded-sm w-[15rem] h-[8.5rem] bg-black relative">
+        <div className={`overflow-hidden rounded-sm bg-black relative ${responsive 
+            ? 'w-full aspect-[3/2] h-auto shadow-md' 
+            : 'w-[15rem] h-[8.5rem]'
+          }`}
+        >
           {(() => {
-            const backdrop = movie?.backdrop_path ? `https://image.tmdb.org/t/p/w780${movie.backdrop_path}` : null;
-            const poster = movie?.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null;
-            const url = backdrop || poster;
-            const useCover = !!backdrop; // posters are portrait; use contain to avoid cropping
+            // For responsive cards, prefer poster image if available
+            const usePosterForResponsive = responsive && movie?.poster_path;
+            const backdrop = !usePosterForResponsive && movie?.backdrop_path 
+              ? `https://image.tmdb.org/t/p/w780${movie.backdrop_path}` 
+              : null;
+            const poster = movie?.poster_path 
+              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+              : null;
+            const url = usePosterForResponsive ? poster : (backdrop || poster);
+            const useCover = !!backdrop && !usePosterForResponsive; 
+            
             return (
               <>
                 <img
                   loading="lazy"
                   decoding="async"
-                  src={url}
+                  src={url ? url : "/no-image.jpg"}
                   alt={movie.title || movie.name || "Artwork"}
-                  className={`${useCover ? 'object-cover' : 'object-contain'} w-full h-full transition-transform duration-700 ease-out`}
+                  className={`${useCover ? 'object-cover' : 'object-cover'} w-full h-full transition-transform duration-700 ease-out`}
                   onError={(e) => { e.target.src = "/no-image.jpg"; }}
                 />
                 {/* Movie title overlay */}
@@ -199,7 +232,7 @@ const MovieCard = ({ movie, onMovieClick }) => {
 
       {/* Grow-to-modal transition overlay (desktop) */}
       {growVisible && isDesktop && growRect && createPortal(
-        <GrowOverlay rect={growRect} posterPath={movie.backdrop_path || movie.poster_path} />,
+        <GrowOverlay rect={growRect} posterPath={movie.backdrop_path || movie.poster_path} movie={movie} />,
         document.body
       )}
     </div>
@@ -305,7 +338,7 @@ function HoverPreview({ left, top, movie, inMyList, like, setLike, onOpen, onTog
               const useCover = !!backdrop;
               return (
                 <img
-                  src={url}
+                  src={url ? url : "/no-image.jpg"}
                   alt={movie.title || movie.name || 'Artwork'}
                   className={`w-full h-full ${useCover ? 'object-cover' : 'object-contain bg-black'} will-change-transform scale-[1.05] animate-[kenburns_8s_ease-out_forwards]`}
                 />
@@ -366,12 +399,24 @@ function HoverPreview({ left, top, movie, inMyList, like, setLike, onOpen, onTog
   );
 }
 
-function GrowOverlay({ rect, posterPath }) {
+function GrowOverlay({ rect, posterPath, movie }) {
   const [expanded, setExpanded] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setExpanded(true));
     return () => cancelAnimationFrame(id);
   }, []);
+  
+  // Properly handle null posterPath with multiple fallbacks
+  let url = "/no-image.jpg";
+  
+  if (posterPath) {
+    url = `https://image.tmdb.org/t/p/w1280${posterPath}`;
+  } else if (movie?.backdrop_path) {
+    url = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
+  } else if (movie?.poster_path) {
+    url = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  }
+  
   return (
     <div className="hidden md:block fixed inset-0 z-[60]">
       {/* dim backdrop */}
@@ -387,11 +432,15 @@ function GrowOverlay({ rect, posterPath }) {
         }}
       >
         <img
-          src={`https://image.tmdb.org/t/p/w1280${posterPath}`}
+          src={ url }
           alt="Backdrop"
           className="w-full h-full object-cover"
+          onError={(e) => { e.target.src = "/no-image.jpg"; }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/80" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+        </div>
       </div>
     </div>
   );

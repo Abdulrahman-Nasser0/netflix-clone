@@ -9,6 +9,7 @@ const Navigation = ({ className = "" }) => {
     { path: "/movies", label: "Movies" },
     { path: "/tv-shows", label: "TV Shows" },
     { path: "/my-list", label: "My List" },
+    { path: "/search", label: "Search" },
   ];
 
   return (
@@ -23,7 +24,7 @@ const Navigation = ({ className = "" }) => {
           <DropdownItem key={item.path}>
             <Link
               to={item.path}
-              className={`block w-full ${
+              className={`block w-full  ${
                 location.pathname === item.path
                   ? "font-semibold"
                   : "font-normal"
@@ -41,7 +42,7 @@ const Navigation = ({ className = "" }) => {
           <Link
             key={item.path}
             to={item.path}
-            className={`text-white hover:text-gray-300 transition-colors duration-200 ${
+            className={`text-white ${item.label === "Search" ? "md:hidden" : ""} hover:text-gray-300 transition-colors duration-200 ${
               location.pathname === item.path ? "font-semibold" : "font-normal"
             }`}
           >

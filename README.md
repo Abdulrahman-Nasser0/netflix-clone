@@ -14,11 +14,11 @@ A modern, responsive Netflix clone built with React and Laravel, leveraging the 
 
 - 🎬 Browse trending movies and TV shows 
 - 📺 View detailed information about movies and shows
-- 🔍 Search functionality for finding specific content (Coming Soon!)
+- 🔍 Search functionality for finding specific content 
 - 📱 Responsive design that works on all devices
 - 👤 User authentication system
 - 📋 Personal watchlist management
-- 🎭 Category filtering for different genres (Coming Soon!)
+- 🎭 Category filtering for different genres 
 
 ## 🚀 Live Demo
 

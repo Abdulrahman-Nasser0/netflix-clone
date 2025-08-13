@@ -4,6 +4,7 @@ import LanguageDropdown from "./ui/LanguageDropdown";
 import Logo from "./ui/Logo";
 import Dropdown, { DropdownItem, DropdownHeader } from "./ui/Dropdown";
 import Navigation from "./ui/Navigation";
+import SearchBar from "./ui/SearchBar";
 import { useState } from "react";
 const Header = () => {
   const location = useLocation();
@@ -54,8 +55,13 @@ const Header = () => {
           {isAuthenticated && <Navigation />}
         </div>
 
-        {/* Right side - Language, Auth buttons or User menu */}
+        {/* Right side - Search, Language, Auth buttons or User menu */}
         <div className="flex items-center space-x-4">
+          {/* Search Bar - Show only for authenticated users */}
+          {isAuthenticated && (
+            <SearchBar className="mr-2 hidden md:block" />
+          )}
+          
           {/* Language Dropdown - Show only for guests */}
           {!isAuthenticated && !isAuthPage && (
             <LanguageDropdown/>

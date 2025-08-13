@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Account from "./pages/Account";
 import ComingSoonPage from "./pages/ComingSoonPage";
+import SearchPage from "./pages/SearchPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MyListProvider } from './contexts/MyListContext';
@@ -79,6 +80,15 @@ const router = createBrowserRouter([
   {
     path: "/coming-soon",
     element: <ComingSoonPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/search",
+    element: (
+      <ProtectedRoute>
+        <SearchPage />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
   }
 ]);

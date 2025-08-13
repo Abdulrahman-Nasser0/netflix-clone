@@ -7,9 +7,19 @@
 }
 
 body {
-  background-color: #000000;
+  background-color: #121212;
   color: #ffffff;
   font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.no-scrollbar {
+  /* Hide scrollbar for Chrome, Safari, and Edge */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
 }
 
 html {

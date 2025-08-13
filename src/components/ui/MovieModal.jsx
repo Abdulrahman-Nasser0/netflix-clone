@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaTimes, FaPlay, FaPlus, FaMinus, FaStar } from "react-icons/fa";
 import { tmdbApi } from "../../services/api/tmdb";
 import { useMyList } from "../../contexts/MyListContext";
@@ -11,50 +11,113 @@ const MovieModal = ({ movie, onClose }) => {
   const [similarMovies, setSimilarMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [preloadedData, setPreloadedData] = useState(null);
+  const preloadedMovieRef = useRef(null);
 
   const { addToMyList, removeFromMyList, isInMyList } = useMyList();
 
   // Determine media type
-  const mediaType = movie.name && !movie.title ? "tv" : "movie";
+  const mediaType = movie.media_type || (movie.name && !movie.title ? "tv" : "movie");
   const inMyList = isInMyList(movie.id, mediaType);
 
+  // Function to fetch movie details that can be called directly or through the effect
+  const fetchMovieDetails = useCallback(async (movieToFetch, mediaTypeToUse) => {
+    if (!movieToFetch) return null;
+    
+    try {
+      const endpoint = mediaTypeToUse === "tv" ? "tv" : "movie";
+
+      // Fetch details, cast, videos, and similar content in parallel
+      const [detailsRes, creditsRes, videosRes, similarRes] =
+        await Promise.all([
+          tmdbApi.get(`/${endpoint}/${movieToFetch.id}`, { language: "en-US" }),
+          tmdbApi.get(`/${endpoint}/${movieToFetch.id}/credits`, { language: "en-US" }),
+          tmdbApi.get(`/${endpoint}/${movieToFetch.id}/videos`, { language: "en-US" }),
+          tmdbApi.get(`/${endpoint}/${movieToFetch.id}/similar`, { language: "en-US", page: 1 }),
+        ]);
+
+      return {
+        details: detailsRes,
+        cast: creditsRes.cast?.slice(0, 10) || [],
+        videos: videosRes.results?.filter((video) => video.type === "Trailer").slice(0, 3) || [],
+        similarMovies: similarRes.results?.slice(0, 12) || []
+      };
+    } catch (err) {
+      console.error("Error fetching movie details:", err);
+      return { error: "Failed to load movie details" };
+    }
+  }, []);
+
+  // Listen for preload events
   useEffect(() => {
-    if (!movie) return;
-
-    const fetchDetails = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const endpoint = mediaType === "tv" ? "tv" : "movie";
-
-        // Fetch details, cast, videos, and similar content in parallel
-        const [detailsRes, creditsRes, videosRes, similarRes] =
-          await Promise.all([
-            tmdbApi.get(`/${endpoint}/${movie.id}`, { language: "en-US" }),
-            tmdbApi.get(`/${endpoint}/${movie.id}/credits`, { language: "en-US" }),
-            tmdbApi.get(`/${endpoint}/${movie.id}/videos`, { language: "en-US" }),
-            tmdbApi.get(`/${endpoint}/${movie.id}/similar`, { language: "en-US", page: 1 }),
-          ]);
-
-        setMovieDetails(detailsRes);
-        setCast(creditsRes.cast?.slice(0, 10) || []);
-        setVideos(
-          videosRes.results
-            ?.filter((video) => video.type === "Trailer")
-            .slice(0, 3) || []
-        );
-        setSimilarMovies(similarRes.results?.slice(0, 12) || []);
-      } catch (err) {
-        console.error("Error fetching movie details:", err);
-        setError("Failed to load movie details");
-      } finally {
-        setLoading(false);
+    const handlePreload = async (e) => {
+      const preloadMovie = e.detail?.movie;
+      if (!preloadMovie || preloadMovie.id !== movie.id) return;
+      
+      // Store the movie we're preloading
+      preloadedMovieRef.current = preloadMovie.id;
+      
+      // Start fetching data
+      const preloadMediaType = preloadMovie.media_type || 
+        (preloadMovie.name && !preloadMovie.title ? "tv" : "movie");
+      
+      const data = await fetchMovieDetails(preloadMovie, preloadMediaType);
+      
+      // Save the preloaded data only if we're still interested in this movie
+      if (data && preloadedMovieRef.current === preloadMovie.id) {
+        setPreloadedData(data);
       }
     };
 
-    fetchDetails();
-  }, [movie, mediaType]);
+    document.addEventListener('preload-movie-modal', handlePreload);
+    return () => {
+      document.removeEventListener('preload-movie-modal', handlePreload);
+    };
+  }, [movie?.id, fetchMovieDetails]);
+  
+  // Main effect to load data when the modal is actually shown
+  useEffect(() => {
+    if (!movie) return;
+
+    // If we already have preloaded data for this movie, use it
+    if (preloadedData && preloadedMovieRef.current === movie.id) {
+      setMovieDetails(preloadedData.details);
+      setCast(preloadedData.cast);
+      setVideos(preloadedData.videos);
+      setSimilarMovies(preloadedData.similarMovies);
+      setError(preloadedData.error || null);
+      setLoading(false);
+      
+      // Reset preloaded data to avoid reusing it later
+      setPreloadedData(null);
+      preloadedMovieRef.current = null;
+      return;
+    }
+    
+    // Otherwise, fetch data normally
+    const loadData = async () => {
+      setLoading(true);
+      setError(null);
+      
+      const data = await fetchMovieDetails(movie, mediaType);
+      
+      // Only update state if the component is still mounted and the movie hasn't changed
+      if (data) {
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setMovieDetails(data.details);
+          setCast(data.cast);
+          setVideos(data.videos);
+          setSimilarMovies(data.similarMovies);
+        }
+      }
+      
+      setLoading(false);
+    };
+    
+    loadData();
+  }, [movie, mediaType, preloadedData, fetchMovieDetails]);
 
   // Close modal on Escape key
   useEffect(() => {
@@ -143,13 +206,19 @@ const MovieModal = ({ movie, onClose }) => {
                 <div className="relative">
                   <div className="aspect-video bg-gradient-to-t from-gray-900 to-transparent relative">
                     <img
-                      src={`https://image.tmdb.org/t/p/w1280${
+                      src={
                         movieDetails?.backdrop_path || movie.backdrop_path
-                      }`}
-                      alt={movieDetails?.title || movieDetails?.name}
-                      className="w-full h-full object-cover object-bottom-right rounded-t-lg  min-h-[15rem]"
+                          ? `https://image.tmdb.org/t/p/w1280${movieDetails?.backdrop_path || movie.backdrop_path}`
+                          : movie.poster_path
+                          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                          : "/no-image.jpg"
+                      }
+                      alt={movieDetails?.title || movieDetails?.name || "Movie"}
+                      className="w-full h-full object-cover object-bottom-right rounded-t-lg min-h-[15rem]"
                       onError={(e) => {
-                        e.target.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+                        e.target.src = movie.poster_path 
+                          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+                          : "/no-image.jpg";
                       }}
                     />
                     <button
@@ -276,32 +345,30 @@ const MovieModal = ({ movie, onClose }) => {
                         Cast
                       </h3>
                       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-4">
-                        {cast
-                          .slice(0, window.innerWidth < 640 ? 6 : 10)
-                          .map((actor) => (
-                            <div key={actor.id} className="text-center">
-                              <div className="w-full aspect-[3/4] mb-1 sm:mb-2 bg-gray-800 rounded overflow-hidden">
-                                <img
-                                  src={
-                                    actor.profile_path
-                                      ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                                      : "/no-image.jpg"
-                                  }
-                                  alt={actor.name}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    e.target.src = "/no-image.jpg";
-                                  }}
-                                />
-                              </div>
-                              <p className="text-white text-xs sm:text-sm font-medium mb-0.5 sm:mb-1 line-clamp-2">
-                                {actor.name}
-                              </p>
-                              <p className="text-gray-400 text-xs line-clamp-2">
-                                {actor.character}
-                              </p>
+                        {cast.slice(0, window.innerWidth < 640 ? 6 : 10).map((actor) => (
+                          <div key={actor.id} className="text-center">
+                            <div className="w-full aspect-[3/4] mb-1 sm:mb-2 bg-gray-800 rounded overflow-hidden">
+                              <img
+                                src={
+                                  actor.profile_path
+                                    ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                                    : "/no-image.jpg"
+                                }
+                                alt={actor.name || "Cast Member"}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.target.src = "/no-image.jpg";
+                                }}
+                              />
                             </div>
-                          ))}
+                            <p className="text-white text-xs sm:text-sm font-medium mb-0.5 sm:mb-1 line-clamp-2">
+                              {actor.name || "Unknown"}
+                            </p>
+                            <p className="text-gray-400 text-xs line-clamp-2">
+                              {actor.character || ""}
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -326,11 +393,15 @@ const MovieModal = ({ movie, onClose }) => {
                         {similarMovies.slice(0, 6).map((similarMovie) => (
                           <div key={similarMovie.id} className="aspect-[2/3]">
                             <img
-                              src={`https://image.tmdb.org/t/p/w300${similarMovie.poster_path}`}
-                              alt={similarMovie.title || similarMovie.name}
+                              src={
+                                similarMovie.poster_path
+                                  ? `https://image.tmdb.org/t/p/w300${similarMovie.poster_path}`
+                                  : "/no-image.jpg"
+                              }
+                              alt={similarMovie.title || similarMovie.name || "Similar Movie"}
                               className="w-full h-full object-cover rounded"
                               onError={(e) => {
-                                e.target.style.display = "none";
+                                e.target.src = "/no-image.jpg";
                               }}
                             />
                           </div>

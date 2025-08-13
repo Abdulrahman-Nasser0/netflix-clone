@@ -33,6 +33,7 @@ const Home = () => {
     setEmailError("");
     navigate("/register", { state: { email } });
   };
+  
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
