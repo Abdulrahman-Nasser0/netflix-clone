@@ -8,12 +8,12 @@ const authHeaders = () => ({
 
 export const userApi = {
   async getCurrent() {
-    const res = await fetch(`${API_URL}/me`, { headers: authHeaders(), credentials: 'include' });
-    if (!res.ok) throw new Error(`GET /me failed: ${res.status}`);
+    const res = await fetch(`${API_URL}/user`, { headers: authHeaders(), credentials: 'include' });
+    if (!res.ok) throw new Error(`GET /user failed: ${res.status}`);
     return res.json();
   },
   async updateProfile(payload) {
-    const res = await fetch(`${API_URL}/user`, {
+    const res = await fetch(`${API_URL}/userUpdate`, {
       method: 'PUT',
       headers: authHeaders(),
       credentials: 'include',
@@ -21,7 +21,7 @@ export const userApi = {
     });
     if (!res.ok) {
       const text = await res.text().catch(() => '');
-      throw new Error(`PUT /user failed: ${res.status} ${text}`);
+      throw new Error(`PUT /userUpdate failed: ${res.status} ${text}`);
     }
     return res.json();
   },

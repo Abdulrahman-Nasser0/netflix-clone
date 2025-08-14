@@ -43,8 +43,8 @@ Cypress.Commands.add('mockBackend', (routes = {}) => {
 	cy.intercept('DELETE', `${base}/delete/*`, { success: true }).as('deleteFavorite')
 
 	// User endpoints
-	cy.intercept('GET', `${base}/me`, { User: { id: 1, name: 'Test User', email: 'user@example.com' } }).as('me')
-	cy.intercept('PUT', `${base}/user`, (req) => {
+	cy.intercept('GET', `${base}/user`, { User: { id: 1, name: 'Test User', email: 'user@example.com' } }).as('user')
+	cy.intercept('PUT', `${base}/userUpdate`, (req) => {
 		req.reply({ User: { id: 1, email: 'user@example.com', ...req.body } })
 	}).as('updateUser')
 

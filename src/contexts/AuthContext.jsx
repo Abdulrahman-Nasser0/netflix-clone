@@ -185,7 +185,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  // Fetch latest user from backend (/me) and update local state/storage
+  // Fetch latest user from backend (/user) and update local state/storage
   const refreshUser = async () => {
     const token = localStorage.getItem('auth_token')
     if (!token) return { success: false, error: 'Not authenticated' }
