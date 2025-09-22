@@ -53,7 +53,7 @@ This Netflix Clone was developed over approximately 15 days as a collaborative p
 
 ### 🛠️ Technical Stack Overview
 
-- **Frontend**: React with Vite, TailwindCSS, React Router, and Context API for state management
+- **Frontend**: React with Vite, TailwindCSS, React Router, and Zustand for state management
 - **Backend**: Laravel REST API with MySQL database, deployed on Railway
 - **External APIs**: TMDB API for movie and TV show data
 - **Testing**: Cypress for end-to-end tests
@@ -87,7 +87,8 @@ netflix-clone/
 ├── public/              # Static assets
 ├── src/
 │   ├── components/      # Reusable UI components
-│   ├── contexts/        # React contexts for state management
+│   ├── contexts/        # (legacy) old React contexts
+│   ├── stores/          # Zustand stores (authStore, myListStore)
 │   ├── hooks/           # Custom hooks
 │   ├── models/          # Data models
 │   ├── pages/           # Application pages
@@ -206,6 +207,19 @@ Notes:
 
 Quick smoke test after deploy:
 - Register → Login → Add to My List → refresh; items should persist.
+
+## 🧩 State Management: Migration to Zustand
+
+We migrated from React Context providers to lightweight Zustand stores for better performance and simpler state flow.
+
+- Replaced `AuthContext` and `MyListContext` with `src/stores/authStore.js` and `src/stores/myListStore.js`.
+- Components import hooks directly: `import { useAuth } from 'src/stores/authStore'` and `import { useMyList } from 'src/stores/myListStore'`.
+- Removed context providers from `App.jsx`; added a tiny `MyListSync` helper that syncs My List after auth changes.
+- Stabilized derived My List arrays with `useMemo` to avoid unnecessary renders/infinite loops.
+
+Why Zustand?
+- Minimal boilerplate, great performance, and selector-based subscriptions.
+- No provider nesting; stores work anywhere in the tree.
 
 ## �📬 Contact
 
