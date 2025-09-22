@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { useMyList } from "../contexts/MyListContext";
+import { useMyList } from "../stores/myListStore";
 import MovieCarousel from "../components/MovieCarousel";
 import MovieModal from "../components/ui/MovieModal";
 import { tmdbApi } from "../services/api/tmdb";

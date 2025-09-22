@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaPlay, FaPlus, FaCheck, FaThumbsUp, FaChevronDown } from "react-icons/fa";
-import { useMyList } from "../../contexts/MyListContext";
+import { useMyList } from "../../stores/myListStore";
 import { tmdbApi } from "../../services/api/tmdb"; // added
 
 // no video providers for hover to avoid third-party branding

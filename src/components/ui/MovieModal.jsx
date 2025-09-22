@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaTimes, FaPlay, FaPlus, FaMinus, FaStar } from "react-icons/fa";
 import { tmdbApi } from "../../services/api/tmdb";
-import { useMyList } from "../../contexts/MyListContext";
+import { useMyList } from "../../stores/myListStore";
 import MovieCarousel from "../MovieCarousel";
 
 const MovieModal = ({ movie, onClose }) => {

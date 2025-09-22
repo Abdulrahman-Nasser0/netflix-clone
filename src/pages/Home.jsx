@@ -5,7 +5,7 @@ import MovieCategoryRow from "../components/MovieCategoryRow";
 import NetflixInput from "../components/ui/NetflixInput";
 import MovieModal from "../components/ui/MovieModal";
 import { movieCategories } from "../services/api/tmdb";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../stores/authStore";
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -118,7 +118,7 @@ const Home = () => {
           </div>
         </div>
       )}
-
+      
       {/* Movie Categories*/}
       <div className="mx-auto mt-8 py-8">
         {movieCategories.map((category, index) => (

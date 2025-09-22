@@ -11,8 +11,7 @@ import Account from "./pages/Account";
 import ComingSoonPage from "./pages/ComingSoonPage";
 import SearchPage from "./pages/SearchPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./contexts/AuthContext";
-import { MyListProvider } from './contexts/MyListContext';
+import { useMyList } from './stores/myListStore'
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -93,13 +92,19 @@ const router = createBrowserRouter([
   }
 ]);
 
+function MyListSync() {
+  // Keep My List in sync with auth state globally
+  const { useSyncWithAuth } = useMyList()
+  useSyncWithAuth()
+  return null
+}
+
 function App() {
   return (
-    <AuthProvider>
-      <MyListProvider>
-        <RouterProvider router={router} />
-      </MyListProvider>
-    </AuthProvider>
+    <>
+      <MyListSync />
+      <RouterProvider router={router} />
+    </>
   );
 }
 
