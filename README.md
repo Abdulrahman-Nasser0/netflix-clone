@@ -186,6 +186,27 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Netflix Clone Backend](https://github.com/Mina-Melad-1/netflix-clone) - Laravel API powering this application
 
+## 🔌 Connect your own backend
+
+Want to fork and host the Laravel backend yourself and plug it into this frontend? Follow the step-by-step guide:
+
+- See docs/backend-hosting.md
+
+Then set your frontend env:
+
+```
+VITE_TMDB_API_KEY=your_tmdb_key
+VITE_BACKEND_API_URL=https://your-backend-host/app/api
+```
+
+Notes:
+- The URL must include the /api suffix.
+- Endpoints used: /login, /register, /user, /userUpdate, /retrieve, /add, /delete/{tmdb_id}.
+- If you hit CORS issues, whitelist your frontend origin in the backend (config/cors.php or env CORS vars) and set SANCTUM_STATEFUL_DOMAINS/SESSION settings as needed.
+
+Quick smoke test after deploy:
+- Register → Login → Add to My List → refresh; items should persist.
+
 ## �📬 Contact
 
 Abdulrahman Nasser - [LinkedIn](https://www.linkedin.com/in/abdulrahman-nasser0/)

@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../stores/authStore";
 import LanguageDropdown from "./ui/LanguageDropdown";
 import Logo from "./ui/Logo";
 import Dropdown, { DropdownItem, DropdownHeader } from "./ui/Dropdown";

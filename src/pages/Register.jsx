@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../stores/authStore";
 import Layout from "../components/Layout";
 import NetflixInput from "../components/ui/NetflixInput";
 
